@@ -1,5 +1,5 @@
 # 1. Базовый образ
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # 2. Установка зависимостей (кэшируется, если package.json не менялся)
 FROM base AS deps
