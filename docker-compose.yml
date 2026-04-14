@@ -11,6 +11,6 @@ services:
     container_name: lakeside-app
     restart: unless-stopped
     ports:
-      - "8082:3000"
+      - "8081:3000"
     env_file:
       - .env
