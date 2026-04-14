@@ -1,65 +1,733 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { motion, AnimatePresence } from "motion/react";
+import { 
+  Car, 
+  Train, 
+  ShoppingBag, 
+  Waves, 
+  Wind, 
+  FlameKindling, 
+  VolumeX, 
+  Settings, 
+  MapPin,
+  ChevronRight,
+  ChevronLeft,
+  Menu,
+  X,
+  Utensils,
+  Warehouse,
+  Trees,
+  Phone,
+  Mail
+} from "lucide-react";
+import { useState, useEffect, ReactNode, FormEvent } from "react";
+
+const NavItem = ({ href, children }: { href: string; children: ReactNode }) => (
+  <a 
+    href={href} 
+    className="text-on-surface-variant hover:text-primary transition-colors text-sm font-medium tracking-tight"
+  >
+    {children}
+  </a>
+);
+
+const StatCard = ({ value, label, index }: { value: string; label: string; index: number }) => (
+  <motion.div 
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: index * 0.1, duration: 0.5 }}
+    className="bg-surface-container-lowest p-8 rounded-lg border border-neutral-100/50 hover:border-primary/30 transition-colors"
+  >
+    <div className="text-4xl font-extrabold tracking-tighter mb-2">{value}</div>
+    <div className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">{label}</div>
+  </motion.div>
+);
+
+const InfraItem = ({ icon: Icon, title, description, index }: { icon: any; title: string; description: string; index: number }) => (
+  <motion.li 
+    initial={{ opacity: 0, x: -30 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: index * 0.1, duration: 0.5 }}
+    className="flex items-start gap-4 group"
+  >
+    <div className="text-tertiary-fixed bg-primary p-2 rounded-lg group-hover:scale-110 transition-transform">
+      <Icon size={24} />
+    </div>
+    <div>
+      <div className="text-xl font-bold tracking-tight group-hover:text-primary transition-colors">{title}</div>
+      <p className="text-on-surface-variant">{description}</p>
+    </div>
+  </motion.li>
+);
+
+const FeatureCard = ({ icon: Icon, title }: { icon: any; title: string }) => (
+  <div className="bg-surface-container-lowest rounded-xl p-8 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+    <Icon size={32} className="text-primary" />
+    <div className="text-xl font-bold tracking-tight">{title}</div>
+  </div>
+);
+
+const TechItem = ({ icon: Icon, text }: { icon: any; text: string }) => (
+  <motion.div 
+    initial={{ opacity: 0, x: -20 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    className="flex items-center gap-6 group"
+  >
+    <div className="w-12 h-12 flex-shrink-0 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
+      <Icon size={24} className="text-tertiary-fixed" />
+    </div>
+    <div className="text-xl font-medium leading-tight">{text}</div>
+  </motion.div>
+);
+
+const photos = [
+  {
+    src: "/images/gallery-1.webp",
+    caption: "Просторная гостиная с панорамным остеклением и выходом на террасу"
+  },
+  {
+    src: "/images/gallery-2.webp",
+    caption: "Кухня-столовая с островом и премиальной бытовой техникой"
+  },
+  {
+    src: "/images/gallery-3.webp",
+    caption: "Мастер-спальня с собственной гардеробной и ванной комнатой"
+  },
+  {
+    src: "/images/gallery-4.webp",
+    caption: "Хол с прекрасным видом можно использовать как кабинет или как гостинную второго этажа"
+  },
+  {
+    src: "/images/gallery-5.webp",
+    caption: "Уютная терраса для вечерних посиделок с видом на озеро"
+  }
+];
+
+const GallerySlider = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const next = () => setCurrentIndex((prev) => (prev + 1) % photos.length);
+  const prev = () => setCurrentIndex((prev) => (prev - 1 + photos.length) % photos.length);
+
+  const handleDragEnd = (e: any, { offset }: any) => {
+    if (offset.x < -50) {
+      next();
+    } else if (offset.x > 50) {
+      prev();
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex flex-col gap-4 md:block">
+      <div className="relative w-full aspect-[3/4] md:aspect-auto md:h-[700px] rounded-3xl overflow-hidden bg-surface-container shadow-xl md:shadow-2xl">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.23, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0 cursor-grab active:cursor-grabbing"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={handleDragEnd}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+            <img 
+              src={photos[currentIndex].src} 
+              alt={`Photo ${currentIndex + 1}`}
+              className="w-full h-full object-cover pointer-events-none"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="hidden md:block absolute bottom-12 left-12 right-12 text-white"
+            >
+              <p className="text-2xl font-medium tracking-tight max-w-2xl leading-relaxed">
+                {photos[currentIndex].caption}
+              </p>
+              <div className="mt-6 flex items-center gap-4">
+                <span className="text-sm font-bold tracking-widest uppercase opacity-50">
+                  {String(currentIndex + 1).padStart(2, '0')} / {String(photos.length).padStart(2, '0')}
+                </span>
+              </div>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Mobile Buttons */}
+        <div className="md:hidden absolute inset-y-0 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
+          <button onClick={prev} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-all active:scale-90">
+            <ChevronLeft size={20} />
+          </button>
+          <button onClick={next} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-all active:scale-90">
+            <ChevronRight size={20} />
+          </button>
+        </div>
+
+        {/* Desktop Buttons */}
+        <div className="hidden md:flex absolute bottom-12 right-12 gap-4 z-10">
+          <button onClick={prev} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-90">
+            <ChevronLeft size={24} />
+          </button>
+          <button onClick={next} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-90">
+            <ChevronRight size={24} />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Description */}
+      <div className="md:hidden px-2 mt-2">
+        <p className="text-lg font-medium tracking-tight text-neutral-900 leading-relaxed">
+          {photos[currentIndex].caption}
+        </p>
+        <div className="mt-4 flex items-center gap-4">
+          <span className="text-sm font-bold tracking-widest uppercase text-neutral-400">
+            {String(currentIndex + 1).padStart(2, '0')} / {String(photos.length).padStart(2, '0')}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PrivacyModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-3xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative text-left shadow-2xl"
           >
-            Documentation
+            <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 transition-colors text-black">
+              <X size={20} />
+            </button>
+            <h2 className="text-3xl font-bold tracking-tight mb-6 text-black">Политика конфиденциальности</h2>
+            <div className="space-y-4 text-sm text-neutral-600 leading-relaxed">
+              <p><strong>1. Общие положения</strong><br/>Настоящая политика обработки персональных данных составлена в соответствии с требованиями Федерального закона от 27.07.2006. №152-ФЗ «О персональных данных» и определяет порядок обработки персональных данных и меры по обеспечению безопасности персональных данных.</p>
+              <p><strong>2. Основные понятия, используемые в Политике</strong><br/>Веб-сайт — совокупность графических и информационных материалов, а также программ для ЭВМ и баз данных, обеспечивающих их доступность в сети интернет.</p>
+              <p><strong>3. Оператор может обрабатывать следующие персональные данные Пользователя:</strong><br/>• Имя<br/>• Номер телефона<br/>Вышеперечисленные данные далее по тексту Политики объединены общим понятием Персональные данные.</p>
+              <p><strong>4. Цели обработки персональных данных</strong><br/>Цель обработки персональных данных Пользователя — информирование Пользователя посредством телефонных звонков; организация просмотра объекта недвижимости; предоставление доступа Пользователю к сервисам, информации и/или материалам, содержащимся на веб-сайте.</p>
+              <p><strong>5. Использование файлов cookie</strong><br/>Веб-сайт использует файлы cookie для улучшения пользовательского опыта, сбора анонимной статистики и оптимизации работы сайта. Оставаясь на сайте, вы соглашаетесь с использованием файлов cookie. Вы всегда можете отключить их сохранение в настройках вашего браузера.</p>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const PlanModal = ({ src, onClose }: { src: string | null; onClose: () => void }) => {
+  const [isZoomed, setIsZoomed] = useState(false);
+
+  const handleClose = () => {
+    setIsZoomed(false);
+    onClose();
+  };
+
+  return (
+    <AnimatePresence>
+      {src && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={handleClose}>
+          <button onClick={handleClose} className="absolute top-4 right-4 md:top-6 md:right-6 z-[110] p-2 bg-neutral-800/50 hover:bg-neutral-800 backdrop-blur-md rounded-full transition-colors text-white">
+            <X size={24} />
+          </button>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-auto shadow-2xl relative"
+          >
+            <div className={`p-4 md:p-8 w-full min-h-[50vh] flex ${isZoomed ? 'items-start justify-start' : 'items-center justify-center'}`}>
+              <img 
+                src={src} 
+                alt="Plan Preview" 
+                onClick={() => setIsZoomed(!isZoomed)}
+                className={`h-auto object-contain transition-all duration-300 ${isZoomed ? 'w-[250%] md:w-[150%] max-w-none cursor-zoom-out' : 'w-full max-w-full cursor-zoom-in'}`} 
+              />
+            </div>
+          </motion.div>
+          <AnimatePresence>
+            {!isZoomed && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[110] bg-white/90 text-black text-sm px-5 py-2.5 rounded-full pointer-events-none backdrop-blur-md shadow-lg font-medium whitespace-nowrap"
+              >
+                Нажмите на план для увеличения
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const formatPhoneNumber = (value: string) => {
+  const digits = value.replace(/\D/g, '');
+  if (!digits) return '';
+  
+  const isRussian = ['7', '8', '9'].includes(digits[0]);
+  if (!isRussian) return '+' + digits.slice(0, 15);
+
+  const startWith9 = digits[0] === '9';
+  const prefix = startWith9 ? '+7' : (digits[0] === '8' ? '8' : '+7');
+  const body = startWith9 ? digits : digits.slice(1);
+  
+  let formatted = prefix;
+  if (body.length > 0) formatted += ' (' + body.substring(0, 3);
+  if (body.length >= 4) formatted += ') ' + body.substring(3, 6);
+  if (body.length >= 7) formatted += '-' + body.substring(6, 8);
+  if (body.length >= 9) formatted += '-' + body.substring(8, 10);
+  return formatted;
+};
+
+export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [formStatus, setFormStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [utmData, setUtmData] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    setUtmData({
+      utm_source: searchParams.get('utm_source') || '',
+      utm_medium: searchParams.get('utm_medium') || '',
+      utm_campaign: searchParams.get('utm_campaign') || '',
+      utm_content: searchParams.get('utm_content') || '',
+      utm_term: searchParams.get('utm_term') || '',
+    });
+  }, []);
+
+  const config = {
+    PHONE: process.env.NEXT_PUBLIC_PHONE || 'телефон',
+    PHONE_LINK: process.env.NEXT_PUBLIC_PHONE_LINK || 'tel:#',
+    EMAIL: process.env.NEXT_PUBLIC_EMAIL || 'электронная почта'
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setFormStatus({ type: null, message: '' });
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name'),
+      phone: formData.get('phone'),
+      ...utmData
+    };
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setFormStatus({ type: 'success', message: result.message });
+        (e.target as HTMLFormElement).reset();
+        setPhone('');
+      } else {
+        setFormStatus({ type: 'error', message: result.message || 'Произошла ошибка. Попробуйте позже.' });
+      }
+    } catch (error) {
+      setFormStatus({ type: 'error', message: 'Не удалось отправить заявку. Проверьте соединение.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
+      <PlanModal src={selectedPlan} onClose={() => setSelectedPlan(null)} />
+
+      <div className="bg-primary text-white py-2 px-6 text-[10px] md:text-xs font-medium tracking-wide z-[60] relative">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex gap-4 md:gap-8">
+            <a href={config.PHONE_LINK} className="flex items-center gap-1.5 hover:text-tertiary-fixed transition-colors">
+              <Phone size={12} /> {config.PHONE}
+            </a>
+          </div>
+          <a href={`mailto:${config.EMAIL}`} className="flex items-center gap-1.5 hover:text-tertiary-fixed transition-colors">
+            <Mail size={12} /> {config.EMAIL}
           </a>
         </div>
+      </div>
+
+      <header className="fixed top-8 md:top-10 w-full z-50 glass border-b border-neutral-100/20">
+        <nav className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+          <div className="text-xl font-bold tracking-tighter uppercase">Дом у озера</div>
+          
+          <div className="hidden md:flex items-center gap-8">
+            <NavItem href="#about">О проекте</NavItem>
+            <NavItem href="#infrastructure">Инфраструктура</NavItem>
+            <NavItem href="#characteristics">Характеристики</NavItem>
+            <NavItem href="#location">Локация</NavItem>
+            <NavItem href="#contact-form">Контакты</NavItem>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
+              className="hidden sm:block bg-primary text-white px-5 py-2.5 rounded-md text-sm font-medium hover:opacity-90 active:scale-95 transition-all"
+            >
+              Записаться на показ
+            </button>
+            <button 
+              className="md:hidden p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
+        </nav>
+
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:hidden bg-white border-b p-6 flex flex-col gap-4"
+          >
+            <NavItem href="#about">О проекте</NavItem>
+            <NavItem href="#infrastructure">Инфраструктура</NavItem>
+            <NavItem href="#characteristics">Характеристики</NavItem>
+            <NavItem href="#location">Локация</NavItem>
+            <NavItem href="#contact-form">Контакты</NavItem>
+            <button 
+              onClick={() => {
+                document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                setIsMenuOpen(false);
+              }}
+              className="bg-primary text-white px-5 py-3 rounded-md text-sm font-medium"
+            >
+              Записаться на показ
+            </button>
+          </motion.div>
+        )}
+      </header>
+
+      <main className="flex-grow">
+        <section className="relative h-[870px] flex items-center justify-start px-6 md:px-12 overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <img 
+              className="w-full h-full object-cover" 
+              src="/images/hero.webp" 
+              alt="Luxury House"
+            />
+            <div className="absolute inset-0 bg-black/30"></div>
+          </div>
+          
+          <div className="relative z-10 max-w-7xl mx-auto w-full">
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="max-w-3xl"
+            >
+              <span className="inline-block bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-6">
+                Прямая продажа
+              </span>
+              <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tighter leading-[0.95] mb-6">
+              Готовый дом 241 м² в КП «Павловы озера»
+              </h1>
+              <p className="text-xl text-white/90 font-medium mb-4 max-w-xl leading-relaxed">
+                Построен в 2025 году. Полная отделка и мебель.
+              </p>
+              <div className="text-4xl md:text-5xl font-extrabold text-white tracking-tighter mb-10">
+                59 млн
+              </div>
+              <button 
+                onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-white text-primary hover:bg-neutral-100 px-8 py-4 rounded-md text-lg font-bold transition-all active:scale-95"
+              >
+                Записаться на показ
+              </button>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="py-24 px-6 md:px-12 bg-surface" id="about">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard value="241 м²" label="Площадь дома" index={0} />
+            <StatCard value="7,5 соток" label="Участок ИЖС" index={1} />
+            <StatCard value="3 спальни" label="и 3 санузла" index={2} />
+            <StatCard value="2025 год" label="год постройки" index={3} />
+          </div>
+        </section>
+
+        <section className="py-24 px-6 md:px-12 bg-white" id="infrastructure">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-4xl font-bold tracking-tighter mb-12"
+              >
+                Инфраструктура и Локация
+              </motion.h2>
+              <ul className="space-y-8">
+                <InfraItem 
+                  icon={Car} 
+                  title="20 км (25 мин) — до МКАД" 
+                  description="Быстрый выезд на Новорижское шоссе" 
+                  index={0}
+                />
+                <InfraItem 
+                  icon={Train} 
+                  title="2 км (7 мин) — до станции МЦД 'Нахабино'" 
+                  description="Удобная связь с центром Москвы" 
+                  index={1}
+                />
+                <InfraItem 
+                  icon={ShoppingBag} 
+                  title="5 минут — ТРК 'Павлово подворье'" 
+                  description="Магазины, рестораны и фитнес-клуб" 
+                  index={2}
+                />
+                <InfraItem 
+                  icon={Waves} 
+                  title="0 минут — Собственное озеро, пляж и лес" 
+                  description="Природа сразу за порогом дома" 
+                  index={3}
+                />
+              </ul>
+            </div>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="h-[500px] bg-surface-container rounded-2xl overflow-hidden relative group"
+            >
+              <img 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                src="/images/infrastructure.webp" 
+                alt="Lake View"
+              />
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="py-24 px-6 md:px-12 bg-white" id="gallery">
+          <div className="max-w-7xl mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-12"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">Фотогалерея</h2>
+              <p className="text-on-surface-variant text-lg">Погрузитесь в атмосферу вашего будущего дома</p>
+            </motion.div>
+            
+            <GallerySlider />
+          </div>
+        </section>
+
+        <section className="py-24 px-6 md:px-12 bg-surface-container-low">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold tracking-tighter mb-12">Участок и Двор</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <FeatureCard icon={Car} title="Навес на 2 авто" />
+              <FeatureCard icon={Utensils} title="BBQ-зона" />
+              <FeatureCard icon={Warehouse} title="Хозблок" />
+              <FeatureCard icon={Trees} title="Ландшафт" />
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24 px-6 md:px-12 bg-primary text-white" id="characteristics">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold tracking-tighter mb-16">Инженерные решения</h2>
+            <div className="grid md:grid-cols-2 gap-x-16 gap-y-12">
+              <TechItem icon={Wind} text="Вентиляция с рекуперацией и кондиционирование" />
+              <TechItem icon={FlameKindling} text="Тёплые полы во всем доме" />
+              <TechItem icon={VolumeX} text="Акустическая стяжка" />
+              <TechItem icon={Settings} text="Магистральный газ, центральная вода и канализация" />
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24 px-6 md:px-12 bg-white overflow-hidden">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
+              <h2 className="text-4xl font-bold tracking-tighter">Планировка</h2>
+              <div className="text-on-surface-variant max-w-md text-right">
+                Продуманное зонирование: Master-bedroom с гардеробной, 2 детские комнаты и кабинет для работы.
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-12">
+              <div className="space-y-6">
+                <div 
+                  className="bg-surface-container rounded-2xl p-8 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden"
+                  onClick={() => setSelectedPlan('/images/plan-1.webp')}
+                >
+                  <img 
+                    className="max-h-full w-auto mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
+                    src="/images/plan-1.webp" 
+                    alt="1st Floor Plan"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 bg-white/90 text-black px-5 py-2.5 rounded-full font-medium transition-opacity text-sm backdrop-blur-sm shadow-sm">
+                      Увеличить планировку
+                    </span>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <h3 className="text-xl font-bold">1 этаж</h3>
+                  <p className="text-on-surface-variant">Кухня-гостиная, гостевой санузел, котельная</p>
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div 
+                  className="bg-surface-container rounded-2xl p-8 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden"
+                  onClick={() => setSelectedPlan('/images/plan-2.webp')}
+                >
+                  <img 
+                    className="max-h-full w-auto mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
+                    src="/images/plan-2.webp" 
+                    alt="2nd Floor Plan"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 bg-white/90 text-black px-5 py-2.5 rounded-full font-medium transition-opacity text-sm backdrop-blur-sm shadow-sm">
+                      Увеличить планировку
+                    </span>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <h3 className="text-xl font-bold">2 этаж</h3>
+                  <p className="text-on-surface-variant">3 спальни, кабинет, 2 ванные комнаты</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24 px-6 md:px-12 bg-surface" id="location">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2 rounded-3xl overflow-hidden h-[500px] relative bg-neutral-200 group">
+              <iframe 
+                src="https://yandex.ru/map-widget/v1/?ll=37.124370,55.828157&z=16&pt=37.124370,55.828157,pm2rdm" 
+                allowFullScreen={true}
+                className="w-full h-full border-0 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+              ></iframe>
+              <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl max-w-xs">
+                <h4 className="font-bold text-lg mb-1">Адрес объекта</h4>
+                <p className="text-on-surface-variant leading-relaxed select-all cursor-text" title="Кликните, чтобы выделить">Московская область, д. Исаково, Лесная улица, 8.</p>
+              </div>
+            </div>
+            <div id="contact-form" className="bg-white p-10 rounded-3xl shadow-sm">
+              <h3 className="text-2xl font-bold tracking-tight mb-8">Связаться с нами</h3>
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ваше имя</label>
+                  <input name="name" required className="architectural-input" placeholder="Александр" type="text" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Номер телефона</label>
+                  <input 
+                    name="phone" 
+                    required 
+                    className="architectural-input" 
+                    placeholder="+7 (900) 000-00-00" 
+                    type="tel" 
+                    value={phone}
+                    onChange={(e) => setPhone(formatPhoneNumber(e.target.value))}
+                    maxLength={18}
+                  />
+                </div>
+                
+                {formStatus.type && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`p-4 rounded-xl text-sm font-medium ${
+                      formStatus.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+                    }`}
+                  >
+                    {formStatus.message}
+                  </motion.div>
+                )}
+
+                <button 
+                  disabled={isSubmitting}
+                  className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-neutral-800 transition-colors mt-4 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Отправка...' : 'Отправить'}
+                </button>
+              </form>
+              <p className="text-[10px] text-center text-on-surface-variant mt-6 leading-relaxed">
+                Нажимая на кнопку, вы соглашаетесь с <button type="button" onClick={() => setIsPrivacyOpen(true)} className="underline hover:text-primary transition-colors">Политикой конфиденциальности</button>.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
+
+      <footer className="w-full py-20 px-6 bg-stone-900 text-white">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 mb-16">
+          <div className="space-y-6">
+            <div className="text-2xl font-bold tracking-tighter uppercase">Дом у озера</div>
+            <p className="text-neutral-400 max-w-xs leading-relaxed">
+              Премиальная загородная недвижимость для тех, кто ценит комфорт, тишину и безупречный стиль.
+            </p>
+          </div>
+          
+          <div className="space-y-6">
+            <h4 className="text-sm font-bold uppercase tracking-widest text-neutral-500">Навигация</h4>
+            <div className="flex flex-col gap-3">
+              <a className="hover:text-tertiary-fixed transition-colors" href="#about">О проекте</a>
+              <a className="hover:text-tertiary-fixed transition-colors" href="#infrastructure">Инфраструктура</a>
+              <a className="hover:text-tertiary-fixed transition-colors" href="#characteristics">Характеристики</a>
+              <a className="hover:text-tertiary-fixed transition-colors" href="#gallery">Галерея</a>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h4 className="text-sm font-bold uppercase tracking-widest text-neutral-500">Контакты</h4>
+            <div className="space-y-4">
+            <a href={config.PHONE_LINK} className="flex items-center gap-3 hover:text-tertiary-fixed transition-colors">
+              <Phone size={18} className="text-primary" /> {config.PHONE}
+              </a>
+            <a href={`mailto:${config.EMAIL}`} className="flex items-center gap-3 hover:text-tertiary-fixed transition-colors">
+              <Mail size={18} className="text-primary" /> {config.EMAIL}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-8 text-sm text-neutral-500">
+          <div>
+            © 2024 Дом у озера премиум. Все права защищены.
+          </div>
+          <div className="flex gap-8">
+            <button onClick={() => setIsPrivacyOpen(true)} className="hover:text-white transition-colors">Политика конфиденциальности</button>
+            <button onClick={() => setIsPrivacyOpen(true)} className="hover:text-white transition-colors">Cookies</button>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
