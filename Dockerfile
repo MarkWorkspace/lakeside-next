@@ -14,11 +14,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Если у вас есть файл .env.production, он скопируется командой COPY . . выше.
-# Если вы передаете переменные через CI/CD, раскомментируйте ARG ниже:
-# ARG NEXT_PUBLIC_PHONE
-# ARG NEXT_PUBLIC_PHONE_LINK
-# ARG NEXT_PUBLIC_EMAIL
+ARG NEXT_PUBLIC_PHONE
+ARG NEXT_PUBLIC_PHONE_LINK
+ARG NEXT_PUBLIC_EMAIL
+ARG NEXT_PUBLIC_YANDEX_METRICA_ID
 
 RUN npm run build
 

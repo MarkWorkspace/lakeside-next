@@ -5,9 +5,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_PHONE: ${NEXT_PUBLIC_PHONE}
+        NEXT_PUBLIC_PHONE_LINK: ${NEXT_PUBLIC_PHONE_LINK}
+        NEXT_PUBLIC_EMAIL: ${NEXT_PUBLIC_EMAIL}
+        NEXT_PUBLIC_YANDEX_METRICA_ID: ${NEXT_PUBLIC_YANDEX_METRICA_ID}
     container_name: lakeside-app
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "8082:3000"
     env_file:
       - .env.local
