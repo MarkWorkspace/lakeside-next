@@ -8,8 +8,11 @@ const inter = Inter({
   subsets: ["latin", "cyrillic"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://xn--80aaenjeva2aw3a.xn--p1ai');
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(siteUrl),
   title: 'Купить дом 241 м² в КП «Павловы озера» — Элитная недвижимость на Новой Риге',
   description: 'Готовый дом 241 м² с мебелью в элитном КП «Павловы озера». Прямая продажа от собственника. 7,5 соток ИЖС, 20 км от МКАД по Новорижскому шоссе. Узнайте цену!',
   openGraph: {
@@ -17,14 +20,6 @@ export const metadata: Metadata = {
     description: 'Продается готовый дом с мебелью и всеми коммуникациями. Прямая продажа от собственника. Участок 7,5 соток (ИЖС), 20 км от МКАД.',
     url: '/',
     siteName: 'Дом у озера',
-    images: [
-      {
-        url: '/images/hero.webp',
-        width: 1200,
-        height: 630,
-        alt: 'Премиальный загородный дом 241 м² в КП Павловы озера',
-      },
-    ],
     locale: 'ru_RU',
     type: 'website',
   },
@@ -32,7 +27,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Дом 241 м² в КП «Павловы озера» на Новой Риге',
     description: 'Продается готовый дом с мебелью и всеми коммуникациями. Прямая продажа от собственника.',
-    images: ['/images/hero.webp'],
   },
 }
 
@@ -46,7 +40,7 @@ export default function RootLayout({
     '@type': 'SingleFamilyResidence',
     name: 'Готовый дом 241 м² в КП «Павловы озера»',
     description: 'Продается готовый премиальный загородный дом площадью 241 м² с мебелью в коттеджном поселке «Павловы озера». Участок 7,5 соток (ИЖС). 20 км от МКАД по Новорижскому шоссе.',
-    image: '/images/hero.webp',
+    image: '/opengraph-image.jpg',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Лесная улица, 8',
