@@ -23,7 +23,7 @@ export default function RootLayout({
       lang="ru"
       className={`${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-white text-neutral-900 relative">
         {children}
         
         {process.env.NEXT_PUBLIC_YANDEX_METRICA_ID && (

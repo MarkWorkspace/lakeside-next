@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { 
   Car, 
   Train, 
@@ -19,9 +19,10 @@ import {
   Warehouse,
   Trees,
   Phone,
-  Mail
+  Mail,
+  ExternalLink
 } from "lucide-react";
-import { useState, useEffect, ReactNode, FormEvent } from "react";
+import { useState, useEffect, ReactNode, FormEvent, useRef } from "react";
 
 const NavItem = ({ href, children }: { href: string; children: ReactNode }) => (
   <a 
@@ -32,17 +33,13 @@ const NavItem = ({ href, children }: { href: string; children: ReactNode }) => (
   </a>
 );
 
-const StatCard = ({ value, label, index }: { value: string; label: string; index: number }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: index * 0.1, duration: 0.5 }}
+const StatCard = ({ value, label }: { value: string; label: string }) => (
+  <div 
     className="bg-surface-container-lowest p-8 rounded-lg border border-neutral-100/50 hover:border-primary/30 transition-colors"
   >
-    <div className="text-4xl font-extrabold tracking-tighter mb-2">{value}</div>
+    <div className="text-4xl font-extrabold tracking-tighter mb-2 text-neutral-900">{value}</div>
     <div className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">{label}</div>
-  </motion.div>
+  </div>
 );
 
 const InfraItem = ({ icon: Icon, title, description, index }: { icon: any; title: string; description: string; index: number }) => (
@@ -57,7 +54,7 @@ const InfraItem = ({ icon: Icon, title, description, index }: { icon: any; title
       <Icon size={24} />
     </div>
     <div>
-      <div className="text-xl font-bold tracking-tight group-hover:text-primary transition-colors">{title}</div>
+      <div className="text-xl font-bold tracking-tight text-neutral-900 group-hover:text-primary transition-colors">{title}</div>
       <p className="text-on-surface-variant">{description}</p>
     </div>
   </motion.li>
@@ -66,7 +63,7 @@ const InfraItem = ({ icon: Icon, title, description, index }: { icon: any; title
 const FeatureCard = ({ icon: Icon, title }: { icon: any; title: string }) => (
   <div className="bg-surface-container-lowest rounded-xl p-8 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
     <Icon size={32} className="text-primary" />
-    <div className="text-xl font-bold tracking-tight">{title}</div>
+    <div className="text-xl font-bold tracking-tight text-neutral-900">{title}</div>
   </div>
 );
 
@@ -139,7 +136,7 @@ const GallerySlider = () => {
           >
             <img 
               src={photos[currentIndex].src} 
-              alt={`Photo ${currentIndex + 1}`}
+              alt={photos[currentIndex].caption}
               className="w-full h-full object-cover pointer-events-none"
             />
             <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -247,14 +244,14 @@ const PlanModal = ({ src, onClose }: { src: string | null; onClose: () => void }
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-auto shadow-2xl relative"
+            className="bg-white rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-auto shadow-2xl relative flex flex-col items-center justify-center"
           >
-            <div className={`p-4 md:p-8 w-full min-h-[50vh] flex ${isZoomed ? 'items-start justify-start' : 'items-center justify-center'}`}>
+            <div className={`p-4 md:p-8 w-full flex-grow flex ${isZoomed ? 'items-start justify-start' : 'items-center justify-center'}`}>
               <img 
                 src={src} 
-                alt="Plan Preview" 
+                alt="Увеличенная планировка дома" 
                 onClick={() => setIsZoomed(!isZoomed)}
-                className={`h-auto object-contain transition-all duration-300 ${isZoomed ? 'w-[250%] md:w-[150%] max-w-none cursor-zoom-out' : 'w-full max-w-full cursor-zoom-in'}`} 
+                className={`h-auto object-contain transition-all duration-300 ${isZoomed ? 'w-[250%] md:w-[150%] max-w-none cursor-zoom-out' : 'max-w-full max-h-full cursor-zoom-in'}`} 
               />
             </div>
           </motion.div>
@@ -304,6 +301,15 @@ export default function App() {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [utmData, setUtmData] = useState<Record<string, string>>({});
 
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+
+  const heroTextY = useTransform(scrollYProgress, [0, 1], ["0%", "60%"]);
+  const heroImageY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     setUtmData({
@@ -318,7 +324,8 @@ export default function App() {
   const config = {
     PHONE: process.env.NEXT_PUBLIC_PHONE || 'телефон',
     PHONE_LINK: process.env.NEXT_PUBLIC_PHONE_LINK || 'tel:#',
-    EMAIL: process.env.NEXT_PUBLIC_EMAIL || 'электронная почта'
+    EMAIL: process.env.NEXT_PUBLIC_EMAIL || 'электронная почта',
+    PHOTO_DRIVE_URL: process.env.NEXT_PUBLIC_PHOTO_DRIVE_URL || '#'
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -359,93 +366,92 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
       <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
       <PlanModal src={selectedPlan} onClose={() => setSelectedPlan(null)} />
 
-      <div className="bg-primary text-white py-2 px-6 text-[10px] md:text-xs font-medium tracking-wide z-[60] relative">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex gap-4 md:gap-8">
-            <a href={config.PHONE_LINK} className="flex items-center gap-1.5 hover:text-tertiary-fixed transition-colors">
-              <Phone size={12} /> {config.PHONE}
+      <header className="fixed top-0 w-full z-50">
+        <div className="bg-primary text-white py-2 px-6 text-[10px] md:text-xs font-medium tracking-wide">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <div className="flex gap-4 md:gap-8">
+              <a href={config.PHONE_LINK} className="flex items-center gap-1.5 hover:text-tertiary-fixed transition-colors">
+                <Phone size={12} /> {config.PHONE}
+              </a>
+            </div>
+            <a href={`mailto:${config.EMAIL}`} className="flex items-center gap-1.5 hover:text-tertiary-fixed transition-colors">
+              <Mail size={12} /> {config.EMAIL}
             </a>
           </div>
-          <a href={`mailto:${config.EMAIL}`} className="flex items-center gap-1.5 hover:text-tertiary-fixed transition-colors">
-            <Mail size={12} /> {config.EMAIL}
-          </a>
         </div>
-      </div>
+        <div className="glass border-b border-neutral-100/20">
+          <nav className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+            <div className="text-xl font-bold tracking-tighter uppercase text-black">Дом у озера</div>
+            
+            <div className="hidden md:flex items-center gap-8">
+              <NavItem href="#about">О проекте</NavItem>
+              <NavItem href="#infrastructure">Инфраструктура</NavItem>
+              <NavItem href="#characteristics">Характеристики</NavItem>
+              <NavItem href="#location">Локация</NavItem>
+              <NavItem href="#contact-form">Контакты</NavItem>
+            </div>
 
-      <header className="fixed top-8 md:top-10 w-full z-50 glass border-b border-neutral-100/20">
-        <nav className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-          <div className="text-xl font-bold tracking-tighter uppercase">Дом у озера</div>
-          
-          <div className="hidden md:flex items-center gap-8">
-            <NavItem href="#about">О проекте</NavItem>
-            <NavItem href="#infrastructure">Инфраструктура</NavItem>
-            <NavItem href="#characteristics">Характеристики</NavItem>
-            <NavItem href="#location">Локация</NavItem>
-            <NavItem href="#contact-form">Контакты</NavItem>
-          </div>
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
+                className="hidden sm:block bg-primary text-white px-5 py-2.5 rounded-md text-sm font-medium hover:opacity-90 active:scale-95 transition-all"
+              >
+                Записаться на показ
+              </button>
+              <button 
+                className="md:hidden p-2"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <X /> : <Menu />}
+              </button>
+            </div>
+          </nav>
 
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
-              className="hidden sm:block bg-primary text-white px-5 py-2.5 rounded-md text-sm font-medium hover:opacity-90 active:scale-95 transition-all"
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="md:hidden bg-white border-b p-6 flex flex-col gap-4"
             >
-              Записаться на показ
-            </button>
-            <button 
-              className="md:hidden p-2"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X /> : <Menu />}
-            </button>
-          </div>
-        </nav>
-
-        {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden bg-white border-b p-6 flex flex-col gap-4"
-          >
-            <NavItem href="#about">О проекте</NavItem>
-            <NavItem href="#infrastructure">Инфраструктура</NavItem>
-            <NavItem href="#characteristics">Характеристики</NavItem>
-            <NavItem href="#location">Локация</NavItem>
-            <NavItem href="#contact-form">Контакты</NavItem>
-            <button 
-              onClick={() => {
-                document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
-                setIsMenuOpen(false);
-              }}
-              className="bg-primary text-white px-5 py-3 rounded-md text-sm font-medium"
-            >
-              Записаться на показ
-            </button>
-          </motion.div>
-        )}
+              <NavItem href="#about">О проекте</NavItem>
+              <NavItem href="#infrastructure">Инфраструктура</NavItem>
+              <NavItem href="#characteristics">Характеристики</NavItem>
+              <NavItem href="#location">Локация</NavItem>
+              <NavItem href="#contact-form">Контакты</NavItem>
+              <button 
+                onClick={() => {
+                  document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                  setIsMenuOpen(false);
+                }}
+                className="bg-primary text-white px-5 py-3 rounded-md text-sm font-medium"
+              >
+                Записаться на показ
+              </button>
+            </motion.div>
+          )}
+        </div>
       </header>
 
-      <main className="flex-grow">
-        <section className="relative h-[870px] flex items-center justify-start px-6 md:px-12 overflow-hidden">
-          <div className="absolute inset-0 z-0">
+      <main className="flex-grow relative">
+        <section ref={heroRef} className="relative h-[870px] flex items-center justify-start px-6 md:px-12 overflow-hidden">
+          <motion.div 
+            className="absolute inset-0 z-0"
+            style={{ y: heroImageY }}
+          >
             <img 
               className="w-full h-full object-cover" 
               src="/images/hero.webp" 
-              alt="Luxury House"
+              alt="Премиальный загородный дом 241 м² в КП Павловы озера"
             />
             <div className="absolute inset-0 bg-black/30"></div>
-          </div>
+          </motion.div>
           
           <div className="relative z-10 max-w-7xl mx-auto w-full">
-            <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="max-w-3xl"
-            >
+            <motion.div style={{ y: heroTextY }} className="max-w-3xl">
               <span className="inline-block bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-6">
                 Прямая продажа
               </span>
@@ -468,12 +474,49 @@ export default function App() {
           </div>
         </section>
 
-        <section className="py-24 px-6 md:px-12 bg-surface" id="about">
+        <section className="py-12 px-6 md:px-12 bg-surface" id="about">
           <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard value="241 м²" label="Площадь дома" index={0} />
-            <StatCard value="7,5 соток" label="Участок ИЖС" index={1} />
-            <StatCard value="3 спальни" label="и 3 санузла" index={2} />
-            <StatCard value="2025 год" label="год постройки" index={3} />
+            <StatCard value="241 м²" label="Площадь дома" />
+            <StatCard value="7,5 соток" label="Участок ИЖС" />
+            <StatCard value="3 спальни" label="и 3 санузла" />
+            <StatCard value="2025 год" label="год постройки" />
+          </div>
+        </section>
+
+        <section className="py-24 px-6 md:px-12 bg-white" id="gallery">
+          <div className="max-w-7xl mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-12"
+            >
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 text-neutral-900">Фотогалерея</h2>
+              <p className="text-on-surface-variant text-lg">Погрузитесь в атмосферу вашего будущего дома</p>
+            </motion.div>
+            
+            <GallerySlider />
+          </div>
+        </section>
+
+        <section className="py-12 px-6 md:px-12 bg-white border-t border-surface-container">
+          <div className="max-w-7xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <a 
+                href={config.PHOTO_DRIVE_URL} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 bg-primary text-white px-6 py-3 rounded-lg text-base font-bold hover:bg-neutral-800 active:scale-95 transition-all shadow-sm hover:shadow-md"
+              >
+                Смотреть все 100+ фотографий на диске
+                <ExternalLink size={18} />
+              </a>
+            </motion.div>
           </div>
         </section>
 
@@ -484,7 +527,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-4xl font-bold tracking-tighter mb-12"
+            className="text-4xl font-bold tracking-tighter mb-12 text-neutral-900"
               >
                 Инфраструктура и Локация
               </motion.h2>
@@ -524,31 +567,15 @@ export default function App() {
               <img 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                 src="/images/infrastructure.webp" 
-                alt="Lake View"
+                alt="Собственное озеро, пляж и инфраструктура поселка"
               />
             </motion.div>
           </div>
         </section>
 
-        <section className="py-24 px-6 md:px-12 bg-white" id="gallery">
-          <div className="max-w-7xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mb-12"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">Фотогалерея</h2>
-              <p className="text-on-surface-variant text-lg">Погрузитесь в атмосферу вашего будущего дома</p>
-            </motion.div>
-            
-            <GallerySlider />
-          </div>
-        </section>
-
         <section className="py-24 px-6 md:px-12 bg-surface-container-low">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl font-bold tracking-tighter mb-12">Участок и Двор</h2>
+        <h2 className="text-4xl font-bold tracking-tighter mb-12 text-neutral-900">Участок и Двор</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <FeatureCard icon={Car} title="Навес на 2 авто" />
               <FeatureCard icon={Utensils} title="BBQ-зона" />
@@ -565,15 +592,15 @@ export default function App() {
               <TechItem icon={Wind} text="Вентиляция с рекуперацией и кондиционирование" />
               <TechItem icon={FlameKindling} text="Тёплые полы во всем доме" />
               <TechItem icon={VolumeX} text="Акустическая стяжка" />
-              <TechItem icon={Settings} text="Магистральный газ, центральная вода и канализация" />
+              <TechItem icon={Settings} text="Магистральный газ, централизованное водоснабжение и канализация" />
             </div>
           </div>
         </section>
 
-        <section className="py-24 px-6 md:px-12 bg-white overflow-hidden">
+        <section className="py-24 px-6 md:px-12 bg-white overflow-hidden relative">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
-              <h2 className="text-4xl font-bold tracking-tighter">Планировка</h2>
+          <h2 className="text-4xl font-bold tracking-tighter text-neutral-900">Планировка</h2>
               <div className="text-on-surface-variant max-w-md text-right">
                 Продуманное зонирование: Master-bedroom с гардеробной, 2 детские комнаты и кабинет для работы.
               </div>
@@ -581,13 +608,13 @@ export default function App() {
             <div className="grid md:grid-cols-2 gap-12">
               <div className="space-y-6">
                 <div 
-                  className="bg-surface-container rounded-2xl p-8 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden"
+                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden"
                   onClick={() => setSelectedPlan('/images/plan-1.webp')}
                 >
                   <img 
                     className="max-h-full w-auto mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
                     src="/images/plan-1.webp" 
-                    alt="1st Floor Plan"
+                    alt="Планировка 1 этажа: кухня-гостиная, гостевой санузел, котельная"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
                     <span className="opacity-0 group-hover:opacity-100 bg-white/90 text-black px-5 py-2.5 rounded-full font-medium transition-opacity text-sm backdrop-blur-sm shadow-sm">
@@ -596,19 +623,19 @@ export default function App() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <h3 className="text-xl font-bold">1 этаж</h3>
+              <h3 className="text-xl font-bold text-neutral-900">1 этаж</h3>
                   <p className="text-on-surface-variant">Кухня-гостиная, гостевой санузел, котельная</p>
                 </div>
               </div>
               <div className="space-y-6">
                 <div 
-                  className="bg-surface-container rounded-2xl p-8 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden"
+                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden"
                   onClick={() => setSelectedPlan('/images/plan-2.webp')}
                 >
                   <img 
                     className="max-h-full w-auto mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
                     src="/images/plan-2.webp" 
-                    alt="2nd Floor Plan"
+                    alt="Планировка 2 этажа: 3 спальни, кабинет, 2 ванные комнаты"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
                     <span className="opacity-0 group-hover:opacity-100 bg-white/90 text-black px-5 py-2.5 rounded-full font-medium transition-opacity text-sm backdrop-blur-sm shadow-sm">
@@ -617,7 +644,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <h3 className="text-xl font-bold">2 этаж</h3>
+              <h3 className="text-xl font-bold text-neutral-900">2 этаж</h3>
                   <p className="text-on-surface-variant">3 спальни, кабинет, 2 ванные комнаты</p>
                 </div>
               </div>
@@ -634,12 +661,12 @@ export default function App() {
                 className="w-full h-full border-0 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
               ></iframe>
               <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl max-w-xs">
-                <h4 className="font-bold text-lg mb-1">Адрес объекта</h4>
+            <h4 className="font-bold text-lg mb-1 text-neutral-900">Адрес объекта</h4>
                 <p className="text-on-surface-variant leading-relaxed select-all cursor-text" title="Кликните, чтобы выделить">Московская область, д. Исаково, Лесная улица, 8.</p>
               </div>
             </div>
             <div id="contact-form" className="bg-white p-10 rounded-3xl shadow-sm">
-              <h3 className="text-2xl font-bold tracking-tight mb-8">Связаться с нами</h3>
+          <h3 className="text-2xl font-bold tracking-tight mb-8 text-neutral-900">Связаться с нами</h3>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ваше имя</label>
@@ -699,9 +726,9 @@ export default function App() {
             <h4 className="text-sm font-bold uppercase tracking-widest text-neutral-500">Навигация</h4>
             <div className="flex flex-col gap-3">
               <a className="hover:text-tertiary-fixed transition-colors" href="#about">О проекте</a>
+              <a className="hover:text-tertiary-fixed transition-colors" href="#gallery">Галерея</a>
               <a className="hover:text-tertiary-fixed transition-colors" href="#infrastructure">Инфраструктура</a>
               <a className="hover:text-tertiary-fixed transition-colors" href="#characteristics">Характеристики</a>
-              <a className="hover:text-tertiary-fixed transition-colors" href="#gallery">Галерея</a>
             </div>
           </div>
 

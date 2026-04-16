@@ -35,6 +35,7 @@ NEXT_PUBLIC_PHONE="+7 (900) 000-00-00"
 NEXT_PUBLIC_PHONE_LINK="tel:+79000000000"
 NEXT_PUBLIC_EMAIL="info@lakeside-estate.ru"
 NEXT_PUBLIC_SITE_URL="https://your-domain.ru"
+NEXT_PUBLIC_PHOTO_DRIVE_URL="https://your-cloud-drive-link.com/photos"
 NEXT_PUBLIC_YANDEX_METRICA_ID="12345678"
 
 # Серверный Webhook (скрыт от браузера)
