@@ -104,6 +104,12 @@ const photos = [
   }
 ];
 
+const heroPhotos = [
+  "/images/hero.webp",
+  "/images/hero-2.webp",
+  "/images/hero-3.webp"
+];
+
 const GallerySlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -158,7 +164,6 @@ const GallerySlider = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Mobile Buttons */}
         <div className="md:hidden absolute inset-y-0 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
           <button onClick={prev} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out">
             <ChevronLeft size={20} />
@@ -168,7 +173,6 @@ const GallerySlider = () => {
           </button>
         </div>
 
-        {/* Desktop Buttons */}
         <div className="hidden md:flex absolute bottom-12 right-12 gap-4 z-10">
           <button onClick={prev} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out">
             <ChevronLeft size={24} />
@@ -179,7 +183,6 @@ const GallerySlider = () => {
         </div>
       </div>
 
-      {/* Mobile Description */}
       <div className="md:hidden px-2 mt-2">
         <p className="text-lg font-medium tracking-tight text-neutral-900 leading-relaxed">
           {photos[currentIndex].caption}
@@ -300,6 +303,9 @@ export default function App() {
   const [phone, setPhone] = useState('');
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [utmData, setUtmData] = useState<Record<string, string>>({});
+  
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [isHeroAutoPlay, setIsHeroAutoPlay] = useState(true);
 
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -320,6 +326,25 @@ export default function App() {
       utm_term: searchParams.get('utm_term') || '',
     });
   }, []);
+
+  useEffect(() => {
+    if (!isHeroAutoPlay) return;
+    const timer = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroPhotos.length);
+    }, 5000);
+    
+    return () => clearInterval(timer);
+  }, [isHeroAutoPlay]);
+
+  const handleNextHero = () => {
+    setIsHeroAutoPlay(false);
+    setHeroIndex((prev) => (prev + 1) % heroPhotos.length);
+  };
+
+  const handlePrevHero = () => {
+    setIsHeroAutoPlay(false);
+    setHeroIndex((prev) => (prev - 1 + heroPhotos.length) % heroPhotos.length);
+  };
 
   const config = {
     PHONE: process.env.NEXT_PUBLIC_PHONE || 'телефон',
@@ -440,21 +465,43 @@ export default function App() {
       </header>
 
       <main className="flex-grow relative">
-        <section ref={heroRef} className="relative h-[870px] flex items-center justify-start px-6 md:px-12 overflow-hidden">
+        <section ref={heroRef} className="relative h-[870px] flex items-center justify-start overflow-hidden group">
+          
           <motion.div 
-            className="absolute inset-0 z-0"
+            className="absolute inset-0 z-0 bg-black"
             style={{ y: heroImageY }}
           >
-            <img 
-              className="w-full h-full object-cover" 
-              src="/images/hero.webp" 
-              alt="Премиальный загородный дом 241 м² в КП Павловы озера"
-            />
-            <div className="absolute inset-0 bg-black/30"></div>
+            <AnimatePresence>
+              <motion.img 
+                key={heroIndex}
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                className="absolute inset-0 w-full h-full object-cover" 
+                src={heroPhotos[heroIndex]} 
+                alt="Премиальный загородный дом 241 м² в КП Павловы озера"
+              />
+            </AnimatePresence>
+            <div className="absolute inset-0 bg-black/30 z-10 pointer-events-none"></div>
           </motion.div>
+
+          <button 
+            onClick={handlePrevHero}
+            className="absolute inset-y-0 left-0 w-24 md:w-32 z-20 flex items-center justify-start pl-4 md:pl-8 group/btn hover:bg-gradient-to-r hover:from-black/50 hover:to-transparent transition-all duration-500 ease-out cursor-pointer"
+          >
+            <ChevronLeft size={48} strokeWidth={1} className="text-white/30 group-hover/btn:text-white group-hover/btn:-translate-x-1 transition-all duration-300 drop-shadow-md" />
+          </button>
+
+          <button 
+            onClick={handleNextHero}
+            className="absolute inset-y-0 right-0 w-24 md:w-32 z-20 flex items-center justify-end pr-4 md:pr-8 group/btn hover:bg-gradient-to-l hover:from-black/50 hover:to-transparent transition-all duration-500 ease-out cursor-pointer"
+          >
+            <ChevronRight size={48} strokeWidth={1} className="text-white/30 group-hover/btn:text-white group-hover/btn:translate-x-1 transition-all duration-300 drop-shadow-md" />
+          </button>
           
-          <div className="relative z-10 max-w-7xl mx-auto w-full">
-            <motion.div style={{ y: heroTextY }} className="max-w-3xl">
+          <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-0 pointer-events-none">
+            <motion.div style={{ y: heroTextY }} className="max-w-3xl pointer-events-auto">
               <span className="inline-block bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-6">
                 Прямая продажа
               </span>
@@ -488,35 +535,36 @@ export default function App() {
 
         <section className="py-12 px-6 md:px-12 bg-white" id="gallery">
           <div className="max-w-7xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mb-12"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 text-neutral-900">Фотогалерея</h2>
-              <p className="text-on-surface-variant text-lg">Погрузитесь в атмосферу вашего будущего дома</p>
-            </motion.div>
+            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-8 md:mb-12">
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 text-neutral-900">Фотогалерея</h2>
+                <p className="text-on-surface-variant text-lg">Погрузитесь в атмосферу вашего будущего дома</p>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="w-full md:w-auto"
+              >
+                <a 
+                  href={config.PHOTO_DRIVE_URL} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full md:w-auto inline-flex justify-center items-center gap-3 bg-primary text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-neutral-800 hover:scale-[1.005] active:scale-95 transition-all duration-70 shadow-sm hover:shadow-lg ease-in-out"
+                >
+                  Смотреть все 100+ фотографий на диске
+                  <ExternalLink size={20} />
+                </a>
+              </motion.div>
+            </div>
             
             <GallerySlider />
-            <div className="text-center mt-12">
-              <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <a 
-                href={config.PHOTO_DRIVE_URL} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-primary text-white px-6 py-3 rounded-lg text-base font-bold hover:bg-neutral-800 hover:scale-[1.005] active:scale-95 transition-all duration-70 shadow-sm hover:shadow-lg ease-in-out"
-              >
-                Смотреть все 100+ фотографий на диске
-                <ExternalLink size={18} />
-              </a>
-            </motion.div>
-            </div>
           </div>
         </section>
 
