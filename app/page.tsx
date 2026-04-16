@@ -35,7 +35,7 @@ const NavItem = ({ href, children }: { href: string; children: ReactNode }) => (
 
 const StatCard = ({ value, label }: { value: string; label: string }) => (
   <div 
-    className="bg-surface-container-lowest p-8 rounded-lg border border-neutral-100/50 hover:border-primary/30 transition-colors"
+    className="bg-surface-container-lowest rounded-xl p-8 flex flex-col shadow-sm"
   >
     <div className="text-4xl font-extrabold tracking-tighter mb-2 text-neutral-900">{value}</div>
     <div className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">{label}</div>
@@ -50,18 +50,18 @@ const InfraItem = ({ icon: Icon, title, description, index }: { icon: any; title
     transition={{ delay: index * 0.1, duration: 0.5 }}
     className="flex items-start gap-4 group"
   >
-    <div className="text-tertiary-fixed bg-primary p-2 rounded-lg group-hover:scale-110 transition-transform">
+    <div className="text-tertiary-fixed bg-primary p-2 rounded-lg">
       <Icon size={24} />
     </div>
     <div>
-      <div className="text-xl font-bold tracking-tight text-neutral-900 group-hover:text-primary transition-colors">{title}</div>
+      <div className="text-xl font-bold tracking-tight text-neutral-900">{title}</div>
       <p className="text-on-surface-variant">{description}</p>
     </div>
   </motion.li>
 );
 
 const FeatureCard = ({ icon: Icon, title }: { icon: any; title: string }) => (
-  <div className="bg-surface-container-lowest rounded-xl p-8 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+  <div className="bg-surface-container-lowest rounded-xl p-8 flex flex-col gap-4 shadow-sm">
     <Icon size={32} className="text-primary" />
     <div className="text-xl font-bold tracking-tight text-neutral-900">{title}</div>
   </div>
@@ -74,7 +74,7 @@ const TechItem = ({ icon: Icon, text }: { icon: any; text: string }) => (
     viewport={{ once: true }}
     className="flex items-center gap-6 group"
   >
-    <div className="w-12 h-12 flex-shrink-0 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
+    <div className="w-12 h-12 flex-shrink-0 bg-white/10 rounded-full flex items-center justify-center">
       <Icon size={24} className="text-tertiary-fixed" />
     </div>
     <div className="text-xl font-medium leading-tight">{text}</div>
@@ -160,20 +160,20 @@ const GallerySlider = () => {
 
         {/* Mobile Buttons */}
         <div className="md:hidden absolute inset-y-0 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
-          <button onClick={prev} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-all active:scale-90">
+          <button onClick={prev} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-all active:scale-105">
             <ChevronLeft size={20} />
           </button>
-          <button onClick={next} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-all active:scale-90">
+          <button onClick={next} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-all active:scale-105">
             <ChevronRight size={20} />
           </button>
         </div>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex absolute bottom-12 right-12 gap-4 z-10">
-          <button onClick={prev} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-90">
+          <button onClick={prev} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-105">
             <ChevronLeft size={24} />
           </button>
-          <button onClick={next} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-90">
+          <button onClick={next} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-105">
             <ChevronRight size={24} />
           </button>
         </div>
@@ -355,6 +355,9 @@ export default function App() {
         setFormStatus({ type: 'success', message: result.message });
         (e.target as HTMLFormElement).reset();
         setPhone('');
+        if (typeof (window as any).ym === 'function' && process.env.NEXT_PUBLIC_YANDEX_METRICA_ID) {
+          (window as any).ym(Number(process.env.NEXT_PUBLIC_YANDEX_METRICA_ID), 'reachGoal', 'order_button');
+        }
       } else {
         setFormStatus({ type: 'error', message: result.message || 'Произошла ошибка. Попробуйте позже.' });
       }
@@ -398,12 +401,12 @@ export default function App() {
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
-                className="hidden sm:block bg-primary text-white px-5 py-2.5 rounded-md text-sm font-medium hover:opacity-90 active:scale-95 transition-all"
+                className="hidden sm:block bg-primary text-white px-5 py-2.5 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg active:scale-[1.02] transition-all"
               >
                 Записаться на показ
               </button>
               <button 
-                className="md:hidden p-2"
+                className="md:hidden p-2 text-black"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 {isMenuOpen ? <X /> : <Menu />}
@@ -427,7 +430,7 @@ export default function App() {
                   document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
                   setIsMenuOpen(false);
                 }}
-                className="bg-primary text-white px-5 py-3 rounded-md text-sm font-medium"
+              className="w-full bg-primary text-white px-5 py-3 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg active:scale-[1.02] transition-all"
               >
                 Записаться на показ
               </button>
@@ -456,7 +459,7 @@ export default function App() {
                 Прямая продажа
               </span>
               <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tighter leading-[0.95] mb-6">
-              Готовый дом 241 м² в КП «Павловы озера»
+              Готовый дом 241&nbsp; м² в КП «Павловы озера»
               </h1>
               <p className="text-xl text-white/90 font-medium mb-4 max-w-xl leading-relaxed">
                 Построен в 2025 году. Полная отделка и мебель.
@@ -466,7 +469,7 @@ export default function App() {
               </div>
               <button 
                 onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-white text-primary hover:bg-neutral-100 px-8 py-4 rounded-md text-lg font-bold transition-all active:scale-95"
+                className="bg-white text-primary hover:bg-neutral-100 px-8 py-4 rounded-md text-lg font-bold transition-all hover:shadow-lg active:scale-[1.02]"
               >
                 Записаться на показ
               </button>
@@ -483,7 +486,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="py-24 px-6 md:px-12 bg-white" id="gallery">
+        <section className="py-12 px-6 md:px-12 bg-white" id="gallery">
           <div className="max-w-7xl mx-auto">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
@@ -491,17 +494,13 @@ export default function App() {
               viewport={{ once: true }}
               className="mb-12"
             >
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 text-neutral-900">Фотогалерея</h2>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 text-neutral-900">Фотогалерея</h2>
               <p className="text-on-surface-variant text-lg">Погрузитесь в атмосферу вашего будущего дома</p>
             </motion.div>
             
             <GallerySlider />
-          </div>
-        </section>
-
-        <section className="py-12 px-6 md:px-12 bg-white border-t border-surface-container">
-          <div className="max-w-7xl mx-auto text-center">
-            <motion.div
+            <div className="text-center mt-12">
+              <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -511,12 +510,13 @@ export default function App() {
                 href={config.PHOTO_DRIVE_URL} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-primary text-white px-6 py-3 rounded-lg text-base font-bold hover:bg-neutral-800 active:scale-95 transition-all shadow-sm hover:shadow-md"
+                className="inline-flex items-center gap-3 bg-primary text-white px-6 py-3 rounded-lg text-base font-bold hover:bg-neutral-800 active:scale-[1.02] transition-all shadow-sm hover:shadow-lg"
               >
                 Смотреть все 100+ фотографий на диске
                 <ExternalLink size={18} />
               </a>
             </motion.div>
+            </div>
           </div>
         </section>
 
@@ -565,7 +565,7 @@ export default function App() {
               className="h-[500px] bg-surface-container rounded-2xl overflow-hidden relative group"
             >
               <img 
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                className="w-full h-full object-cover" 
                 src="/images/infrastructure.webp" 
                 alt="Собственное озеро, пляж и инфраструктура поселка"
               />
@@ -599,16 +599,16 @@ export default function App() {
 
         <section className="py-24 px-6 md:px-12 bg-white overflow-hidden relative">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
           <h2 className="text-4xl font-bold tracking-tighter text-neutral-900">Планировка</h2>
-              <div className="text-on-surface-variant max-w-md text-right">
+              <div className="text-on-surface-variant max-w-md text-left md:text-right">
                 Продуманное зонирование: Master-bedroom с гардеробной, 2 детские комнаты и кабинет для работы.
               </div>
             </div>
             <div className="grid md:grid-cols-2 gap-12">
               <div className="space-y-6">
                 <div 
-                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden"
+                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                   onClick={() => setSelectedPlan('/images/plan-1.webp')}
                 >
                   <img 
@@ -629,7 +629,7 @@ export default function App() {
               </div>
               <div className="space-y-6">
                 <div 
-                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden"
+                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                   onClick={() => setSelectedPlan('/images/plan-2.webp')}
                 >
                   <img 
@@ -670,14 +670,14 @@ export default function App() {
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ваше имя</label>
-                  <input name="name" required className="architectural-input" placeholder="Александр" type="text" />
+                  <input name="name" required className="architectural-input text-neutral-900" placeholder="Александр" type="text" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Номер телефона</label>
                   <input 
                     name="phone" 
                     required 
-                    className="architectural-input" 
+                    className="architectural-input text-neutral-900" 
                     placeholder="+7 (900) 000-00-00" 
                     type="tel" 
                     value={phone}
@@ -700,7 +700,7 @@ export default function App() {
 
                 <button 
                   disabled={isSubmitting}
-                  className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-neutral-800 transition-colors mt-4 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-neutral-800 transition-all mt-4 active:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Отправка...' : 'Отправить'}
                 </button>
