@@ -160,20 +160,20 @@ const GallerySlider = () => {
 
         {/* Mobile Buttons */}
         <div className="md:hidden absolute inset-y-0 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
-          <button onClick={prev} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-all active:scale-105">
+          <button onClick={prev} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out">
             <ChevronLeft size={20} />
           </button>
-          <button onClick={next} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 transition-all active:scale-105">
+          <button onClick={next} className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out">
             <ChevronRight size={20} />
           </button>
         </div>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex absolute bottom-12 right-12 gap-4 z-10">
-          <button onClick={prev} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-105">
+          <button onClick={prev} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out">
             <ChevronLeft size={24} />
           </button>
-          <button onClick={next} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-105">
+          <button onClick={next} className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out">
             <ChevronRight size={24} />
           </button>
         </div>
@@ -206,7 +206,7 @@ const PrivacyModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
             onClick={(e) => e.stopPropagation()}
             className="bg-white rounded-3xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative text-left shadow-2xl"
           >
-            <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 transition-colors text-black">
+            <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out text-black">
               <X size={20} />
             </button>
             <h2 className="text-3xl font-bold tracking-tight mb-6 text-black">Политика конфиденциальности</h2>
@@ -236,7 +236,7 @@ const PlanModal = ({ src, onClose }: { src: string | null; onClose: () => void }
     <AnimatePresence>
       {src && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={handleClose}>
-          <button onClick={handleClose} className="absolute top-4 right-4 md:top-6 md:right-6 z-[110] p-2 bg-neutral-800/50 hover:bg-neutral-800 backdrop-blur-md rounded-full transition-colors text-white">
+          <button onClick={handleClose} className="absolute top-4 right-4 md:top-6 md:right-6 z-[110] p-2 bg-neutral-800/50 hover:bg-neutral-800 backdrop-blur-md rounded-full hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out text-white">
             <X size={24} />
           </button>
           <motion.div 
@@ -401,12 +401,12 @@ export default function App() {
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
-                className="hidden sm:block bg-primary text-white px-5 py-2.5 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg active:scale-[1.02] transition-all"
+                className="hidden sm:block bg-primary text-white px-5 py-2.5 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out"
               >
                 Записаться на показ
               </button>
               <button 
-                className="md:hidden p-2 text-black"
+                className="md:hidden p-2 text-black hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 {isMenuOpen ? <X /> : <Menu />}
@@ -430,7 +430,7 @@ export default function App() {
                   document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
                   setIsMenuOpen(false);
                 }}
-              className="w-full bg-primary text-white px-5 py-3 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg active:scale-[1.02] transition-all"
+              className="w-full bg-primary text-white px-5 py-3 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out"
               >
                 Записаться на показ
               </button>
@@ -469,7 +469,7 @@ export default function App() {
               </div>
               <button 
                 onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-white text-primary hover:bg-neutral-100 px-8 py-4 rounded-md text-lg font-bold transition-all hover:shadow-lg active:scale-[1.02]"
+                className="bg-white text-primary hover:bg-neutral-100 px-8 py-4 rounded-md text-lg font-bold hover:shadow-lg hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out"
               >
                 Записаться на показ
               </button>
@@ -510,7 +510,7 @@ export default function App() {
                 href={config.PHOTO_DRIVE_URL} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-primary text-white px-6 py-3 rounded-lg text-base font-bold hover:bg-neutral-800 active:scale-[1.02] transition-all shadow-sm hover:shadow-lg"
+                className="inline-flex items-center gap-3 bg-primary text-white px-6 py-3 rounded-lg text-base font-bold hover:bg-neutral-800 hover:scale-[1.005] active:scale-95 transition-all duration-70 shadow-sm hover:shadow-lg ease-in-out"
               >
                 Смотреть все 100+ фотографий на диске
                 <ExternalLink size={18} />
@@ -608,11 +608,11 @@ export default function App() {
             <div className="grid md:grid-cols-2 gap-12">
               <div className="space-y-6">
                 <div 
-                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-70 hover:shadow-xl hover:-translate-y-1"
                   onClick={() => setSelectedPlan('/images/plan-1.webp')}
                 >
                   <img 
-                    className="max-h-full w-auto mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
+                    className="max-h-full w-auto mix-blend-multiply group-hover:scale-[1.005] transition-transform duration-700 ease-in-out" 
                     src="/images/plan-1.webp" 
                     alt="Планировка 1 этажа: кухня-гостиная, гостевой санузел, котельная"
                   />
@@ -629,11 +629,11 @@ export default function App() {
               </div>
               <div className="space-y-6">
                 <div 
-                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-70 hover:shadow-xl hover:-translate-y-1"
                   onClick={() => setSelectedPlan('/images/plan-2.webp')}
                 >
                   <img 
-                    className="max-h-full w-auto mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
+                    className="max-h-full w-auto mix-blend-multiply group-hover:scale-[1.005] transition-transform duration-700 ease-in-out" 
                     src="/images/plan-2.webp" 
                     alt="Планировка 2 этажа: 3 спальни, кабинет, 2 ванные комнаты"
                   />
@@ -700,7 +700,7 @@ export default function App() {
 
                 <button 
                   disabled={isSubmitting}
-                  className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-neutral-800 transition-all mt-4 active:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-neutral-800 hover:scale-[1.005] active:scale-95 hover:shadow-lg transition-all duration-70 ease-in-out mt-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
                 >
                   {isSubmitting ? 'Отправка...' : 'Отправить'}
                 </button>
