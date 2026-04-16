@@ -13,6 +13,7 @@ import {
   MapPin,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
   Menu,
   X,
   Utensils,
@@ -108,6 +109,29 @@ const heroPhotos = [
   "/images/hero.webp",
   "/images/hero-2.webp",
   "/images/hero-3.webp"
+];
+
+const faqData = [
+  {
+    question: "Дом находится в деревне Исаково или входит в состав коттеджного поселка?",
+    answer: "Дом находится на территории коттеджного поселка «Павловы Озера». Внутри поселка созданы все условия для комфортного проживания: асфальтные подъездные дороги, широкие улицы с тротуарами и освещением, детские площадки, зелёные общественные зоны, продуктовый магазин, площадка для выгула собак, гостевые парковки, собственный пляж и причал. Охраняемая территория, въезд по пропускам через КПП."
+  },
+  {
+    question: "Этот дом строился на продажу? Сколько таких вы продали?",
+    answer: "Мы строительная компания «Стройся Вятка». Занимаемся производством и строительством современных каркасных домов заводского изготовления Prefab. В 99% случаев мы возводим дома конкретно «под заказчика» на его участке. Однако, в 2025 году мы приняли участие в масштабной международной выставке Open Village, которая проходила на территории КП «Павловы Озера». Этот дом был лицом нашей компании, в нем применены самые современные технические решения. Стояла цель - показать, что может наша компания. Этот дом единственный в своем экземпляре."
+  },
+  {
+    question: "Какие затраты на эксплуатацию дома?",
+    answer: "На территории КП действует собственная управляющая компания. Основные затраты – это содержание общего имущества, охрана и потребление ресурсу. За счет высокой энергоэффективнсоти конструкций, а также современных технических решений (плита УШП, система вентиляции с рекуперацией тепла) даже в холодные зимние месяцы с учетом затрат на отопление платеж составлял в районе 15 000 рублей в месяц."
+  },
+  {
+    question: "Почему дом обшит нестроганой доской?",
+    answer: "На самом деле, на доме применена комбинированная отделка: фасадная штукатурка и деревянная часть. В качестве деревянной отделки использовалась финская фасадная доска с тонкопиленой поверхностью. Это позволяет увеличить адгезию лакокрасочного покрытия к древесине, а также повышает толщину слоя краски. Таким образом, фасад будет служить значительно дольше, чем на «гладких» аналогах."
+  },
+  {
+    question: "Построить такой же дом на моем участке будет дешевле?",
+    answer: "К сожалению нет. Для строительства дома под выставку Open Village 2025 многие известные поставщики предоставляли огромные скидки на свои материалы. Таким образом, вы получаете дом, построенный с применением премиальных материалов, по цене на 30% ниже рыночной."
+  }
 ];
 
 const GallerySlider = () => {
@@ -276,6 +300,54 @@ const PlanModal = ({ src, onClose }: { src: string | null; onClose: () => void }
   );
 };
 
+const FAQSection = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  return (
+    <section className="py-24 px-6 md:px-12 bg-white" id="faq">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-4xl font-bold tracking-tighter mb-12 text-neutral-900">Частые вопросы</h2>
+        <div className="bg-surface-container-low rounded-3xl p-8 md:p-12 shadow-sm">
+          {faqData.map((faq, index) => (
+            <div key={index} className="border-b border-neutral-200/60 last:border-0">
+              <button
+                className="w-full py-6 flex justify-between items-center text-left focus:outline-none group"
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+              >
+                <span className="text-lg md:text-xl font-bold text-neutral-900 pr-8 group-hover:text-primary transition-colors">
+                  {faq.question}
+                </span>
+                <motion.div
+                  animate={{ rotate: openIndex === index ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex-shrink-0 text-primary bg-primary/10 rounded-full p-2"
+                >
+                  <ChevronDown size={20} />
+                </motion.div>
+              </button>
+              <AnimatePresence>
+                {openIndex === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pb-6 text-on-surface-variant leading-relaxed">
+                      {faq.answer}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const formatPhoneNumber = (value: string) => {
   const digits = value.replace(/\D/g, '');
   if (!digits) return '';
@@ -419,6 +491,7 @@ export default function App() {
               <NavItem href="#about">О проекте</NavItem>
               <NavItem href="#infrastructure">Инфраструктура</NavItem>
               <NavItem href="#characteristics">Характеристики</NavItem>
+              <NavItem href="#faq">FAQ</NavItem>
               <NavItem href="#location">Локация</NavItem>
               <NavItem href="#contact-form">Контакты</NavItem>
             </div>
@@ -448,6 +521,7 @@ export default function App() {
               <NavItem href="#about">О проекте</NavItem>
               <NavItem href="#infrastructure">Инфраструктура</NavItem>
               <NavItem href="#characteristics">Характеристики</NavItem>
+              <NavItem href="#faq">FAQ</NavItem>
               <NavItem href="#location">Локация</NavItem>
               <NavItem href="#contact-form">Контакты</NavItem>
               <button 
@@ -645,7 +719,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="py-24 px-6 md:px-12 bg-white overflow-hidden relative">
+        <section className="py-24 px-6 md:px-12 bg-surface-container-low overflow-hidden relative">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
           <h2 className="text-4xl font-bold tracking-tighter text-neutral-900">Планировка</h2>
@@ -656,11 +730,11 @@ export default function App() {
             <div className="grid md:grid-cols-2 gap-12">
               <div className="space-y-6">
                 <div 
-                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-70 hover:shadow-xl hover:-translate-y-1"
+                  className="bg-white shadow-sm rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-70 hover:shadow-xl hover:-translate-y-1"
                   onClick={() => setSelectedPlan('/images/plan-1.webp')}
                 >
                   <img 
-                    className="max-h-full w-auto mix-blend-multiply group-hover:scale-[1.005] transition-transform duration-700 ease-in-out" 
+                    className="max-h-full w-auto group-hover:scale-[1.005] transition-transform duration-700 ease-in-out" 
                     src="/images/plan-1.webp" 
                     alt="Планировка 1 этажа: кухня-гостиная, гостевой санузел, котельная"
                   />
@@ -677,7 +751,7 @@ export default function App() {
               </div>
               <div className="space-y-6">
                 <div 
-                  className="bg-surface-container rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-70 hover:shadow-xl hover:-translate-y-1"
+                  className="bg-white shadow-sm rounded-2xl p-4 h-[500px] flex items-center justify-center cursor-pointer group relative overflow-hidden transition-all duration-70 hover:shadow-xl hover:-translate-y-1"
                   onClick={() => setSelectedPlan('/images/plan-2.webp')}
                 >
                   <img 
@@ -699,6 +773,8 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        <FAQSection />
 
         <section className="py-24 px-6 md:px-12 bg-surface" id="location">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-12">
@@ -777,6 +853,7 @@ export default function App() {
               <a className="hover:text-tertiary-fixed transition-colors" href="#gallery">Галерея</a>
               <a className="hover:text-tertiary-fixed transition-colors" href="#infrastructure">Инфраструктура</a>
               <a className="hover:text-tertiary-fixed transition-colors" href="#characteristics">Характеристики</a>
+              <a className="hover:text-tertiary-fixed transition-colors" href="#faq">FAQ</a>
             </div>
           </div>
 
