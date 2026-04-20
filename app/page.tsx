@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, PanInfo } from "framer-motion";
 import { 
   Car, 
   Train, 
@@ -9,8 +9,7 @@ import {
   Wind, 
   FlameKindling, 
   VolumeX, 
-  Settings, 
-  MapPin,
+  Settings,
   ChevronRight,
   ChevronLeft,
   ChevronDown,
@@ -21,9 +20,13 @@ import {
   Trees,
   Phone,
   Mail,
-  ExternalLink
+  ExternalLink,
+  LucideIcon
 } from "lucide-react";
 import { useState, useEffect, ReactNode, FormEvent, useRef } from "react";
+import { photos, heroPhotos, faqData } from "./data";
+import PrivacyModal from "./components/PrivacyModal";
+import PlanModal from "./components/PlanModal";
 
 const NavItem = ({ href, children }: { href: string; children: ReactNode }) => (
   <a 
@@ -43,7 +46,7 @@ const StatCard = ({ value, label }: { value: string; label: string }) => (
   </div>
 );
 
-const InfraItem = ({ icon: Icon, title, description, index }: { icon: any; title: string; description: string; index: number }) => (
+const InfraItem = ({ icon: Icon, title, description, index }: { icon: LucideIcon; title: string; description: string; index: number }) => (
   <motion.li 
     initial={{ opacity: 0, x: -30 }}
     whileInView={{ opacity: 1, x: 0 }}
@@ -61,14 +64,14 @@ const InfraItem = ({ icon: Icon, title, description, index }: { icon: any; title
   </motion.li>
 );
 
-const FeatureCard = ({ icon: Icon, title }: { icon: any; title: string }) => (
+const FeatureCard = ({ icon: Icon, title }: { icon: LucideIcon; title: string }) => (
   <div className="bg-surface-container-lowest rounded-xl p-8 flex flex-col gap-4 shadow-sm">
     <Icon size={32} className="text-primary" />
     <div className="text-xl font-bold tracking-tight text-neutral-900">{title}</div>
   </div>
 );
 
-const TechItem = ({ icon: Icon, text }: { icon: any; text: string }) => (
+const TechItem = ({ icon: Icon, text }: { icon: LucideIcon; text: string }) => (
   <motion.div 
     initial={{ opacity: 0, x: -20 }}
     whileInView={{ opacity: 1, x: 0 }}
@@ -82,65 +85,13 @@ const TechItem = ({ icon: Icon, text }: { icon: any; text: string }) => (
   </motion.div>
 );
 
-const photos = [
-  {
-    src: "/images/gallery-1.webp",
-    caption: "Просторная гостиная с панорамным остеклением и выходом на террасу"
-  },
-  {
-    src: "/images/gallery-2.webp",
-    caption: "Кухня-столовая с островом и премиальной бытовой техникой"
-  },
-  {
-    src: "/images/gallery-3.webp",
-    caption: "Мастер-спальня с собственной гардеробной и ванной комнатой"
-  },
-  {
-    src: "/images/gallery-4.webp",
-    caption: "Хол с прекрасным видом можно использовать как кабинет или как гостинную второго этажа"
-  },
-  {
-    src: "/images/gallery-5.webp",
-    caption: "Уютная терраса для вечерних посиделок с видом на озеро"
-  }
-];
-
-const heroPhotos = [
-  "/images/hero.webp",
-  "/images/hero-2.webp",
-  "/images/hero-3.webp"
-];
-
-const faqData = [
-  {
-    question: "Дом находится в деревне Исаково или входит в состав коттеджного поселка?",
-    answer: "Дом находится на территории коттеджного поселка «Павловы Озера». Внутри поселка созданы все условия для комфортного проживания: асфальтные подъездные дороги, широкие улицы с тротуарами и освещением, детские площадки, зелёные общественные зоны, продуктовый магазин, площадка для выгула собак, гостевые парковки, собственный пляж и причал. Охраняемая территория, въезд по пропускам через КПП."
-  },
-  {
-    question: "Этот дом строился на продажу? Сколько таких вы продали?",
-    answer: "Мы строительная компания «Стройся Вятка». Занимаемся производством и строительством современных каркасных домов заводского изготовления Prefab. В 99% случаев мы возводим дома конкретно «под заказчика» на его участке. Однако, в 2025 году мы приняли участие в масштабной международной выставке Open Village, которая проходила на территории КП «Павловы Озера». Этот дом был лицом нашей компании, в нем применены самые современные технические решения. Стояла цель - показать, что может наша компания. Этот дом единственный в своем экземпляре."
-  },
-  {
-    question: "Какие затраты на эксплуатацию дома?",
-    answer: "На территории КП действует собственная управляющая компания. Основные затраты – это содержание общего имущества, охрана и потребление ресурсу. За счет высокой энергоэффективнсоти конструкций, а также современных технических решений (плита УШП, система вентиляции с рекуперацией тепла) даже в холодные зимние месяцы с учетом затрат на отопление платеж составлял в районе 15 000 рублей в месяц."
-  },
-  {
-    question: "Почему дом обшит нестроганой доской?",
-    answer: "На самом деле, на доме применена комбинированная отделка: фасадная штукатурка и деревянная часть. В качестве деревянной отделки использовалась финская фасадная доска с тонкопиленой поверхностью. Это позволяет увеличить адгезию лакокрасочного покрытия к древесине, а также повышает толщину слоя краски. Таким образом, фасад будет служить значительно дольше, чем на «гладких» аналогах."
-  },
-  {
-    question: "Построить такой же дом на моем участке будет дешевле?",
-    answer: "К сожалению нет. Для строительства дома под выставку Open Village 2025 многие известные поставщики предоставляли огромные скидки на свои материалы. Таким образом, вы получаете дом, построенный с применением премиальных материалов, по цене на 30% ниже рыночной."
-  }
-];
-
 const GallerySlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const next = () => setCurrentIndex((prev) => (prev + 1) % photos.length);
   const prev = () => setCurrentIndex((prev) => (prev - 1 + photos.length) % photos.length);
 
-  const handleDragEnd = (e: any, { offset }: any) => {
+  const handleDragEnd = (e: MouseEvent | TouchEvent | PointerEvent, { offset }: PanInfo) => {
     if (offset.x < -50) {
       next();
     } else if (offset.x > 50) {
@@ -218,85 +169,6 @@ const GallerySlider = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-const PrivacyModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative text-left shadow-2xl"
-          >
-            <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out text-black">
-              <X size={20} />
-            </button>
-            <h2 className="text-3xl font-bold tracking-tight mb-6 text-black">Политика конфиденциальности</h2>
-            <div className="space-y-4 text-sm text-neutral-600 leading-relaxed">
-              <p><strong>1. Общие положения</strong><br/>Настоящая политика обработки персональных данных составлена в соответствии с требованиями Федерального закона от 27.07.2006. №152-ФЗ «О персональных данных» и определяет порядок обработки персональных данных и меры по обеспечению безопасности персональных данных.</p>
-              <p><strong>2. Основные понятия, используемые в Политике</strong><br/>Веб-сайт — совокупность графических и информационных материалов, а также программ для ЭВМ и баз данных, обеспечивающих их доступность в сети интернет.</p>
-              <p><strong>3. Оператор может обрабатывать следующие персональные данные Пользователя:</strong><br/>• Имя<br/>• Номер телефона<br/>Вышеперечисленные данные далее по тексту Политики объединены общим понятием Персональные данные.</p>
-              <p><strong>4. Цели обработки персональных данных</strong><br/>Цель обработки персональных данных Пользователя — информирование Пользователя посредством телефонных звонков; организация просмотра объекта недвижимости; предоставление доступа Пользователю к сервисам, информации и/или материалам, содержащимся на веб-сайте.</p>
-              <p><strong>5. Использование файлов cookie</strong><br/>Веб-сайт использует файлы cookie для улучшения пользовательского опыта, сбора анонимной статистики и оптимизации работы сайта. Оставаясь на сайте, вы соглашаетесь с использованием файлов cookie. Вы всегда можете отключить их сохранение в настройках вашего браузера.</p>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
-};
-
-const PlanModal = ({ src, onClose }: { src: string | null; onClose: () => void }) => {
-  const [isZoomed, setIsZoomed] = useState(false);
-
-  const handleClose = () => {
-    setIsZoomed(false);
-    onClose();
-  };
-
-  return (
-    <AnimatePresence>
-      {src && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={handleClose}>
-          <button onClick={handleClose} className="absolute top-4 right-4 md:top-6 md:right-6 z-[110] p-2 bg-neutral-800/50 hover:bg-neutral-800 backdrop-blur-md rounded-full hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out text-white">
-            <X size={24} />
-          </button>
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-auto shadow-2xl relative flex flex-col items-center justify-center"
-          >
-            <div className={`p-4 md:p-8 w-full flex-grow flex ${isZoomed ? 'items-start justify-start' : 'items-center justify-center'}`}>
-              <img 
-                src={src} 
-                alt="Увеличенная планировка дома" 
-                onClick={() => setIsZoomed(!isZoomed)}
-                className={`h-auto object-contain transition-all duration-300 ${isZoomed ? 'w-[250%] md:w-[150%] max-w-none cursor-zoom-out' : 'max-w-full max-h-full cursor-zoom-in'}`} 
-              />
-            </div>
-          </motion.div>
-          <AnimatePresence>
-            {!isZoomed && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[110] bg-white/90 text-black text-sm px-5 py-2.5 rounded-full pointer-events-none backdrop-blur-md shadow-lg font-medium whitespace-nowrap"
-              >
-                Нажмите на план для увеличения
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      )}
-    </AnimatePresence>
   );
 };
 
@@ -452,8 +324,10 @@ export default function App() {
         setFormStatus({ type: 'success', message: result.message });
         (e.target as HTMLFormElement).reset();
         setPhone('');
-        if (typeof (window as any).ym === 'function' && process.env.NEXT_PUBLIC_YANDEX_METRICA_ID) {
-          (window as any).ym(Number(process.env.NEXT_PUBLIC_YANDEX_METRICA_ID), 'reachGoal', 'order_button');
+        
+        const w = window as Window & { ym?: (id: number, action: string, goal: string) => void };
+        if (typeof w.ym === 'function' && process.env.NEXT_PUBLIC_YANDEX_METRICA_ID) {
+          w.ym(Number(process.env.NEXT_PUBLIC_YANDEX_METRICA_ID), 'reachGoal', 'order_button');
         }
       } else {
         setFormStatus({ type: 'error', message: result.message || 'Произошла ошибка. Попробуйте позже.' });

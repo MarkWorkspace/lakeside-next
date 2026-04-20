@@ -33,6 +33,11 @@ body {
   color: var(--foreground);
 }
 
+/* Отступ для всех якорных ссылок, чтобы фиксированная шапка не перекрывала контент */
+[id] {
+  scroll-margin-top: 100px; /* Примерная высота вашей шапки */
+}
+
 @layer base {
   body {
     @apply font-sans bg-surface text-primary antialiased;

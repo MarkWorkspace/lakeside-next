@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import SmoothScroll from "./SmoothScroll";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -79,7 +80,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-white text-neutral-900 relative">
-        {children}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
         
         {process.env.NEXT_PUBLIC_YANDEX_METRICA_ID && (
           <>
