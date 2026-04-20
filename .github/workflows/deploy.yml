@@ -1,0 +1,18 @@
+name: Deploy Next.js to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Pull and Rebuild
+        run: |
+          # Переходим в папку относительно домашней директории текущего пользователя
+          cd ~/projects/lakeside-next
+          
+          git pull origin main
+          docker compose up -d --build
