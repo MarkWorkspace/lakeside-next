@@ -460,7 +460,7 @@ export default function App() {
                 Построен в 2025 году. Полная отделка и мебель.
               </p>
               <div className="text-4xl md:text-5xl font-extrabold text-white tracking-tighter mb-10">
-                59 млн
+                49.9 млн
               </div>
               <button 
                 onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}

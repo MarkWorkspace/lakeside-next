@@ -57,7 +57,7 @@ export default function RootLayout({
     numberOfRooms: 4,
     offers: {
       '@type': 'Offer',
-      price: '59000000',
+      price: '49900000',
       priceCurrency: 'RUB',
       availability: 'https://schema.org/InStock',
       url: '/',
