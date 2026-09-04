@@ -44,7 +44,9 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
   }, []);
 
   useAnimationFrame((time) => {
-    lenisRef.current?.raf(time);
+    if (lenisRef.current) {
+      lenisRef.current.raf(time);
+    }
   });
 
   return <>{children}</>;

@@ -303,9 +303,19 @@ export default function App() {
     setFormStatus({ type: null, message: '' });
 
     const formData = new FormData(e.currentTarget);
+    const rawPhone = (formData.get('phone') as string) || '';
+    const phoneDigits = rawPhone.replace(/\D/g, '');
+
+    if (phoneDigits.length < 10) {
+      setFormStatus({ type: 'error', message: 'Пожалуйста, введите полный номер телефона' });
+      setIsSubmitting(false);
+      return;
+    }
+
     const data = {
       name: formData.get('name'),
       phone: formData.get('phone'),
+      website: formData.get('website'),
       ...utmData
     };
 
@@ -666,6 +676,16 @@ export default function App() {
             <div id="contact-form" className="bg-white p-10 rounded-3xl shadow-sm">
           <h3 className="text-2xl font-bold tracking-tight mb-8 text-neutral-900">Связаться с нами</h3>
               <form className="space-y-6" onSubmit={handleSubmit}>
+                {/* Honeypot поле для отсеивания спам-ботов */}
+                <div className="hidden" aria-hidden="true">
+                  <input 
+                    type="text" 
+                    name="website" 
+                    tabIndex={-1} 
+                    autoComplete="off" 
+                  />
+                </div>
+
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ваше имя</label>
                   <input name="name" required className="architectural-input text-neutral-900" placeholder="Александр" type="text" />
@@ -746,7 +766,7 @@ export default function App() {
 
         <div className="max-w-7xl mx-auto pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-8 text-sm text-neutral-500">
           <div>
-            © 2024 Дом у озера премиум. Все права защищены.
+            © 2025 Дом у озера премиум. Все права защищены.
           </div>
           <div className="flex gap-8">
             <button onClick={() => setIsPrivacyOpen(true)} className="hover:text-white transition-colors">Политика конфиденциальности</button>

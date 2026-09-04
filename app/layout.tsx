@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://xn--80aaenjeva2aw3a.xn--p1ai');
+  (process.env.NODE_ENV === 'production' ? 'https://xn--80aaenjeva2aw3a.xn--p1ai' : 'http://localhost:3000');
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -94,7 +94,7 @@ export default function RootLayout({
                 k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
                 (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
              
-                ym(${process.env.NEXT_PUBLIC_YANDEX_METRICA_ID}, "init", {
+                ym(${Number(process.env.NEXT_PUBLIC_YANDEX_METRICA_ID) || 0}, "init", {
                      clickmap:true,
                      trackLinks:true,
                      accurateTrackBounce:true,
