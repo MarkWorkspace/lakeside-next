@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Lenis from 'lenis';
-import { useAnimationFrame } from 'framer-motion';
+import { useAnimationFrame } from 'motion/react';
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
 
 export default function PrivacyModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
