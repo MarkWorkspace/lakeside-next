@@ -6,6 +6,7 @@ import GallerySection from "./components/GallerySection";
 import InfrastructureSection from "./components/InfrastructureSection";
 import FeaturesSection from "./components/FeaturesSection";
 import TechSection from "./components/TechSection";
+import SpecificationsSection from "./components/SpecificationsSection";
 import FloorplansSection from "./components/FloorplansSection";
 import FAQSection from "./components/FAQSection";
 import LocationSection from "./components/LocationSection";
@@ -34,6 +35,7 @@ export default function Page() {
           <InfrastructureSection />
           <FeaturesSection />
           <TechSection />
+          <SpecificationsSection />
           <FloorplansSection />
           <FAQSection />
           <LocationSection />
