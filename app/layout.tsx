@@ -32,6 +32,12 @@ export const metadata: Metadata = {
       { url: '/icon.svg', type: 'image/svg+xml' },
     ],
   },
+  other: {
+    'geo.position': '55.828157;37.124370',
+    'ICBM': '55.828157, 37.124370',
+    'geo.region': 'RU-MOS',
+    'geo.placename': 'коттеджный посёлок Павловы Озера, деревня Исаково, городской округ Истра, Московская область',
+  },
   robots: {
     index: true,
     follow: true,
