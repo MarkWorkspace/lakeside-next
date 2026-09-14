@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
@@ -7,29 +7,65 @@ import SmoothScroll from "./SmoothScroll";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin", "cyrillic"],
+  display: "swap",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
   (process.env.NODE_ENV === 'production' ? 'https://xn--80aaenjeva2aw3a.xn--p1ai' : 'http://localhost:3000');
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#18181b",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: 'Купить дом 241 м² в КП «Павловы озера» — Элитная недвижимость на Новой Риге',
   description: 'Готовый дом 241 м² с мебелью в элитном КП «Павловы озера». Прямая продажа от собственника. 7,5 соток ИЖС, 20 км от МКАД по Новорижскому шоссе. Узнайте цену!',
+  alternates: {
+    canonical: '/',
+  },
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     title: 'Дом 241 м² в КП «Павловы озера» на Новой Риге',
     description: 'Продается готовый дом с мебелью и всеми коммуникациями. Прямая продажа от собственника. Участок 7,5 соток (ИЖС), 20 км от МКАД.',
-    url: '/',
+    url: siteUrl,
     siteName: 'Дом у озера',
     locale: 'ru_RU',
     type: 'website',
+    images: [
+      {
+        url: '/opengraph-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Готовый загородный дом 241 м² в КП Павловы озера',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Дом 241 м² в КП «Павловы озера» на Новой Риге',
     description: 'Продается готовый дом с мебелью и всеми коммуникациями. Прямая продажа от собственника.',
+    images: ['/opengraph-image.jpg'],
   },
-}
+};
 
 export default function RootLayout({
   children,

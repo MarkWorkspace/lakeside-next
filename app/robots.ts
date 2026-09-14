@@ -4,10 +4,29 @@ export default function robots(): MetadataRoute.Robots {
     (process.env.NODE_ENV === 'production' ? 'https://xn--80aaenjeva2aw3a.xn--p1ai' : 'http://localhost:3000');
 
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-    },
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/api/', '/_next/'],
+      },
+      {
+        userAgent: [
+          'OAI-SearchBot',
+          'GPTBot',
+          'PerplexityBot',
+          'ClaudeBot',
+          'anthropic-ai',
+          'Google-Extended',
+          'Applebot',
+          'Applebot-Extended',
+          'Bytespider',
+          'CCBot',
+          'cohere-ai',
+        ],
+        allow: '/',
+      },
+    ],
     sitemap: `${siteUrl}/sitemap.xml`,
   };
 }
