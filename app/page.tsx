@@ -27,6 +27,7 @@ import { useState, useEffect, ReactNode, FormEvent, useRef } from "react";
 import { photos, heroPhotos, faqData } from "./data";
 import PrivacyModal from "./components/PrivacyModal";
 import PlanModal from "./components/PlanModal";
+import SmartCaptcha from "./components/SmartCaptcha";
 
 const NavItem = ({ href, children }: { href: string; children: ReactNode }) => (
   <a 
@@ -247,6 +248,8 @@ export default function App() {
   const [phone, setPhone] = useState('');
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [utmData, setUtmData] = useState<Record<string, string>>({});
+  const [smartCaptchaToken, setSmartCaptchaToken] = useState('');
+  const [formInteractionTime, setFormInteractionTime] = useState<number | null>(null);
   
   const [heroIndex, setHeroIndex] = useState(0);
   const [isHeroAutoPlay, setIsHeroAutoPlay] = useState(true);
@@ -312,10 +315,44 @@ export default function App() {
       return;
     }
 
+    // Если подключен клиентский ключ SmartCaptcha, требуем прохождения капчи
+    if (process.env.NEXT_PUBLIC_SMARTCAPTCHA_CLIENT_KEY && !smartCaptchaToken) {
+      setFormStatus({ type: 'error', message: 'Пожалуйста, подтвердите, что вы не робот' });
+      setIsSubmitting(false);
+      return;
+    }
+
+    const fillTimeMs = formInteractionTime ? Date.now() - formInteractionTime : null;
+
+    // Получаем ym_client_id для передачи в n8n / CRM
+    let ymClientId = '';
+    try {
+      const metrikaId = Number(process.env.NEXT_PUBLIC_YANDEX_METRICA_ID);
+      const w = window as Window & { ym?: (id: number, action: string, cb: (id: string) => void) => void };
+      if (typeof w.ym === 'function' && metrikaId) {
+        await new Promise<void>((resolve) => {
+          try {
+            w.ym?.(metrikaId, 'getClientID', (id: string) => {
+              ymClientId = id || '';
+              resolve();
+            });
+            setTimeout(resolve, 300);
+          } catch {
+            resolve();
+          }
+        });
+      }
+    } catch {
+      // Игнорируем ошибку получения ClientID
+    }
+
     const data = {
       name: formData.get('name'),
       phone: formData.get('phone'),
       website: formData.get('website'),
+      fillTimeMs,
+      smartCaptchaToken,
+      ymClientId,
       ...utmData
     };
 
@@ -334,10 +371,15 @@ export default function App() {
         setFormStatus({ type: 'success', message: result.message });
         (e.target as HTMLFormElement).reset();
         setPhone('');
+        setSmartCaptchaToken('');
+        setFormInteractionTime(null);
         
-        const w = window as Window & { ym?: (id: number, action: string, goal: string) => void };
-        if (typeof w.ym === 'function' && process.env.NEXT_PUBLIC_YANDEX_METRICA_ID) {
-          w.ym(Number(process.env.NEXT_PUBLIC_YANDEX_METRICA_ID), 'reachGoal', 'order_button');
+        // ВЫЗЫВАЕМ ЦЕЛЬ В ЯНДЕКС.МЕТРИКУ ТОЛЬКО ЕСЛИ БЭКЕНД РАЗРЕШИЛ (reachGoal === true)
+        if (result.reachGoal) {
+          const w = window as Window & { ym?: (id: number, action: string, goal: string) => void };
+          if (typeof w.ym === 'function' && process.env.NEXT_PUBLIC_YANDEX_METRICA_ID) {
+            w.ym(Number(process.env.NEXT_PUBLIC_YANDEX_METRICA_ID), 'reachGoal', 'order_button');
+          }
         }
       } else {
         setFormStatus({ type: 'error', message: result.message || 'Произошла ошибка. Попробуйте позже.' });
@@ -675,7 +717,15 @@ export default function App() {
             </div>
             <div id="contact-form" className="bg-white p-10 rounded-3xl shadow-sm">
           <h3 className="text-2xl font-bold tracking-tight mb-8 text-neutral-900">Связаться с нами</h3>
-              <form className="space-y-6" onSubmit={handleSubmit}>
+              <form 
+                className="space-y-6" 
+                onSubmit={handleSubmit}
+                onFocus={() => {
+                  if (!formInteractionTime) {
+                    setFormInteractionTime(Date.now());
+                  }
+                }}
+              >
                 {/* Honeypot поле для отсеивания спам-ботов */}
                 <div className="hidden" aria-hidden="true">
                   <input 
@@ -703,6 +753,8 @@ export default function App() {
                     maxLength={18}
                   />
                 </div>
+
+                <SmartCaptcha onSuccess={(token) => setSmartCaptchaToken(token)} />
                 
                 {formStatus.type && (
                   <motion.div 
