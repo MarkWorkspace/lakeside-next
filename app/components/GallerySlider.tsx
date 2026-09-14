@@ -67,14 +67,14 @@ export default function GallerySlider() {
           <button 
             onClick={prev} 
             aria-label="Предыдущее фото"
-            className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out cursor-pointer"
+            className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-200 ease-out cursor-pointer"
           >
             <ChevronLeft size={20} />
           </button>
           <button 
             onClick={next} 
             aria-label="Следующее фото"
-            className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out cursor-pointer"
+            className="pointer-events-auto w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/40 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-200 ease-out cursor-pointer"
           >
             <ChevronRight size={20} />
           </button>
@@ -84,14 +84,14 @@ export default function GallerySlider() {
           <button 
             onClick={prev} 
             aria-label="Предыдущее фото"
-            className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out cursor-pointer"
+            className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-200 ease-out cursor-pointer"
           >
             <ChevronLeft size={24} />
           </button>
           <button 
             onClick={next} 
             aria-label="Следующее фото"
-            className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-70 ease-in-out cursor-pointer"
+            className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 hover:scale-[1.005] hover:shadow-lg active:scale-95 transition-all duration-200 ease-out cursor-pointer"
           >
             <ChevronRight size={24} />
           </button>

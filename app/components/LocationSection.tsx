@@ -28,13 +28,13 @@ export default function LocationSection() {
                 href="https://yandex.ru/maps/?rtext=~55.828157,37.124370&rtt=auto" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded-lg hover:bg-neutral-800 transition-colors inline-flex items-center gap-1 cursor-pointer"
+                className="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded-lg hover:bg-neutral-800 hover:scale-[1.02] active:scale-95 hover:shadow-md transition-all duration-200 ease-out inline-flex items-center gap-1 cursor-pointer"
               >
                 Яндекс Карты
               </a>
               <a 
                 href="yandexnavi://build_route_on_map?lat_to=55.828157&lon_to=37.124370"
-                className="px-3 py-1.5 bg-amber-500 text-white text-xs font-bold rounded-lg hover:bg-amber-600 transition-colors inline-flex items-center gap-1 md:hidden cursor-pointer"
+                className="px-3 py-1.5 bg-amber-500 text-white text-xs font-bold rounded-lg hover:bg-amber-600 hover:scale-[1.02] active:scale-95 hover:shadow-md transition-all duration-200 ease-out inline-flex items-center gap-1 md:hidden cursor-pointer"
               >
                 Навигатор
               </a>
@@ -42,7 +42,7 @@ export default function LocationSection() {
                 href="https://2gis.ru/routeSearch/rsType/car/to/37.124370,55.828157" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors cursor-pointer"
+                className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 hover:scale-[1.02] active:scale-95 hover:shadow-md transition-all duration-200 ease-out cursor-pointer"
               >
                 2ГИС
               </a>

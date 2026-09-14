@@ -205,7 +205,7 @@ export default function ContactForm() {
 
         <button 
           disabled={isSubmitting}
-          className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-neutral-800 hover:scale-[1.005] active:scale-95 hover:shadow-lg transition-all duration-70 ease-in-out mt-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none cursor-pointer"
+          className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-neutral-800 hover:scale-[1.005] active:scale-95 hover:shadow-lg transition-all duration-200 ease-out mt-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none cursor-pointer"
         >
           {isSubmitting ? "Отправка..." : "Отправить"}
         </button>

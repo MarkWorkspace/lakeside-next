@@ -15,7 +15,7 @@ export default function PrivacyModal({ isOpen, onClose }: { isOpen: boolean; onC
             onClick={(e) => e.stopPropagation()}
             className="bg-white rounded-3xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative text-left shadow-2xl"
           >
-            <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out text-black">
+            <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 hover:scale-[1.005] active:scale-95 transition-all duration-200 ease-out text-black">
               <X size={20} />
             </button>
             <h2 className="text-3xl font-bold tracking-tight mb-6 text-black">Политика конфиденциальности</h2>

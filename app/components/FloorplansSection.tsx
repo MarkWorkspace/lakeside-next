@@ -24,7 +24,7 @@ export default function FloorplansSection() {
           <div className="grid md:grid-cols-2 gap-12">
             <div className="space-y-6">
               <div 
-                className="bg-white shadow-sm rounded-2xl p-4 h-[500px] relative flex items-center justify-center cursor-pointer group overflow-hidden transition-all duration-70 hover:shadow-xl hover:-translate-y-1"
+                className="bg-white shadow-sm rounded-2xl p-4 h-[500px] relative flex items-center justify-center cursor-pointer group overflow-hidden transition-all duration-200 ease-out hover:shadow-xl hover:-translate-y-1"
                 onClick={() => setSelectedPlan('/images/plan-1.webp')}
               >
                 <div className="relative w-full h-full">
@@ -51,7 +51,7 @@ export default function FloorplansSection() {
 
             <div className="space-y-6">
               <div 
-                className="bg-white shadow-sm rounded-2xl p-4 h-[500px] relative flex items-center justify-center cursor-pointer group overflow-hidden transition-all duration-70 hover:shadow-xl hover:-translate-y-1"
+                className="bg-white shadow-sm rounded-2xl p-4 h-[500px] relative flex items-center justify-center cursor-pointer group overflow-hidden transition-all duration-200 ease-out hover:shadow-xl hover:-translate-y-1"
                 onClick={() => setSelectedPlan('/images/plan-2.webp')}
               >
                 <div className="relative w-full h-full">

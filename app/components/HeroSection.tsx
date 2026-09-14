@@ -103,7 +103,7 @@ export default function HeroSection() {
           </div>
           <button 
             onClick={scrollToContact}
-            className="bg-white text-primary hover:bg-neutral-100 px-8 py-4 rounded-md text-lg font-bold hover:shadow-lg hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out cursor-pointer"
+            className="bg-white text-primary hover:bg-neutral-100 px-8 py-4 rounded-md text-lg font-bold hover:shadow-lg hover:scale-[1.005] active:scale-95 transition-all duration-200 ease-out cursor-pointer"
           >
             Записаться на показ
           </button>

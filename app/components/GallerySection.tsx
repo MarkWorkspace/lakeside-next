@@ -24,7 +24,7 @@ export default function GallerySection({ photoDriveUrl }: GallerySectionProps) {
               href={photoDriveUrl} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="w-full md:w-auto inline-flex justify-center items-center gap-3 bg-primary text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-neutral-800 hover:scale-[1.005] active:scale-95 transition-all duration-70 shadow-sm hover:shadow-lg ease-in-out cursor-pointer"
+              className="w-full md:w-auto inline-flex justify-center items-center gap-3 bg-primary text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-neutral-800 hover:scale-[1.005] active:scale-95 transition-all duration-200 shadow-sm hover:shadow-lg ease-out cursor-pointer"
             >
               Смотреть все 100+ фотографий на диске
               <ExternalLink size={20} />

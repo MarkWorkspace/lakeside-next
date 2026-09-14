@@ -16,7 +16,7 @@ export default function PlanModal({ src, onClose }: { src: string | null; onClos
     <AnimatePresence>
       {src && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={handleClose}>
-          <button onClick={handleClose} className="absolute top-4 right-4 md:top-6 md:right-6 z-[110] p-2 bg-neutral-800/50 hover:bg-neutral-800 backdrop-blur-md rounded-full hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out text-white">
+          <button onClick={handleClose} className="absolute top-4 right-4 md:top-6 md:right-6 z-[110] p-2 bg-neutral-800/50 hover:bg-neutral-800 backdrop-blur-md rounded-full hover:scale-[1.005] active:scale-95 transition-all duration-200 ease-out text-white">
             <X size={24} />
           </button>
           <motion.div 

@@ -68,12 +68,12 @@ export default function Header({ phone, phoneLink, email }: HeaderProps) {
           <div className="flex items-center gap-4">
             <button 
               onClick={scrollToContact}
-              className="hidden sm:block bg-primary text-white px-5 py-2.5 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out cursor-pointer"
+              className="hidden sm:block bg-primary text-white px-5 py-2.5 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg hover:scale-[1.005] active:scale-95 transition-all duration-200 ease-out cursor-pointer"
             >
               Записаться на показ
             </button>
             <button 
-              className="md:hidden p-2 text-black hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out cursor-pointer"
+              className="md:hidden p-2 text-black hover:scale-[1.005] active:scale-95 transition-all duration-200 ease-out cursor-pointer"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Меню"
             >
@@ -96,7 +96,7 @@ export default function Header({ phone, phoneLink, email }: HeaderProps) {
             <NavItem href="#contact-form" onClick={() => setIsMenuOpen(false)}>Контакты</NavItem>
             <button 
               onClick={scrollToContact}
-              className="w-full bg-primary text-white px-5 py-3 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg hover:scale-[1.005] active:scale-95 transition-all duration-70 ease-in-out cursor-pointer"
+              className="w-full bg-primary text-white px-5 py-3 rounded-md text-sm font-medium hover:bg-neutral-800 hover:shadow-lg hover:scale-[1.005] active:scale-95 transition-all duration-200 ease-out cursor-pointer"
             >
               Записаться на показ
             </button>
